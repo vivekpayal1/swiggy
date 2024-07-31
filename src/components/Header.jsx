@@ -1,3 +1,4 @@
+import { navItems } from "../utils/constant";
 function Header() {
   return (
     <div className="w-full shadow-md h-20 flex justify-center items-center">
@@ -18,60 +19,20 @@ function Header() {
           </p>
         </div>
         <nav>
-          <ul className="flex items-center gap-8">
-            <li>
-              <a
-                href="#"
-                className="flex gap-3 items-center text-[#3d4152] font-semibold"
-              >
-                <i className="fi fi-rr-briefcase"></i>
-                <span>Swiggy Corporate</span>
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                className="flex gap-3 items-center text-[#3d4152] font-semibold"
-              >
-                <i className="fi fi-rr-search"></i>
-                Search
-              </a>
-            </li>{" "}
-            <li>
-              <a
-                href="#"
-                className="flex gap-3 items-center text-[#3d4152] font-semibold"
-              >
-                <i className="fi fi-rr-badge-percent"></i>
-                Offers
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                className="flex gap-3 items-center text-[#3d4152] font-semibold"
-              >
-                <i className="fi fi-rr-info"></i>
-                Help
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                className="flex gap-3 items-center text-[#3d4152] font-semibold"
-              >
-                <i className="fi fi-rs-user"></i>
-                Sign In
-              </a>
-            </li>      <li>
-              <a
-                href="#"
-                className="flex gap-3 items-center text-[#3d4152] font-semibold"
-              >
-               <i className="fi fi-rr-shopping-cart-add"></i>
-                Cart
-              </a>
-            </li>
+          <ul className="flex items-center gap-12">
+            {navItems?.map((navItem) => {
+              return (
+                <li key={navItem?.id}>
+                  <a
+                    href="#"
+                    className="flex gap-3 items-center text-[#3d4152] font-semibold"
+                  >
+                    <i className={`fi ${navItem?.navIcon} mt-1`}></i>
+                    <span>{navItem?.name}</span>
+                  </a>
+                </li>
+              );
+            })}
           </ul>
         </nav>
       </div>
