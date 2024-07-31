@@ -1,4 +1,12 @@
+import Body from "./components/Body";
+import Header from "./components/Header";
+
 function App() {
-  return <h1>Hello</h1>;
+  return (
+    <>
+      <Header />
+      <Body />
+    </>
+  );
 }
 export default App;
