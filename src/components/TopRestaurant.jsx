@@ -46,8 +46,8 @@ function TopRestaurantSlide({ data }) {
           className={`flex w-full gap-5 duration-1000 mt-6`}
           style={{ translate: `-${topRestaurantSlide}%` }}
         >
-          {data.map(({ info }) => {
-            return <RestaurantCard info={info} key={info?.id} />;
+          {data.map(({ info, cta: { link } }) => {
+            return <RestaurantCard info={info} key={info?.id} link={link} />;
           })}
         </div>
       </div>
