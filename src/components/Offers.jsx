@@ -47,7 +47,7 @@ function Offers({ data }) {
           style={{ translate: `-${slideInitialValue}%` }}
           className={`flex duration-1000`}
         >
-          {data.map((item) => {
+          {data?.map((item) => {
             return (
               <img
                 key={item.id}

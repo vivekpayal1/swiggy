@@ -21,7 +21,7 @@ function RestaurantCard({ info, link }) {
         <div className="mt-3">
           <h2 className="text-lg font-semibold">{info?.name}</h2>
           <p className="flex items-center gap-1 font-semibold text-base">
-            <i className="fi fi-ss-circle-star text-green-600 text-lg"></i>{" "}
+            <i className="fi fi-ss-circle-star text-green-600 text-lg"></i>
             {info?.avgRating} <span>{info?.sla?.slaString}</span>
           </p>
           <p className="line-clamp-1 text-black/60 font-medium">
