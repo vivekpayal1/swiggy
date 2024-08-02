@@ -5,10 +5,12 @@ import { CLOUDNARY_IMG_ID } from "../utils/constant";
 function RestaurantMenu() {
   const { id } = useParams();
   let menuId = id.split("-").at(-1);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  console.log(currentIndex);
+  const [slideInitialValue, setslideInitialValue] = useState(0);
   const [menuData, setMenuData] = useState([]);
   const [resInfo, setResInfo] = useState([]);
-  const [discount, setDiscountData] = useState([]);
-  console.log(resInfo);
+  const [discountData, setDiscountData] = useState([]);
   useEffect(() => {
     fetchMenu();
   }, []);
@@ -25,10 +27,22 @@ function RestaurantMenu() {
     setDiscountData(
       data?.data?.cards[3]?.card?.card?.gridElements?.infoWithStyle?.offers
     );
-    setMenuData(
-      data.data.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards[2]?.card
-        ?.card?.itemCards
-    );
+    let actualMenuData =
+      (data?.data?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards).filter(
+        (data) => data.card.card.itemCards || data.card.card.categories
+      );
+    setMenuData(actualMenuData);
+  }
+
+  function handleNext() {
+    slideInitialValue >= 60
+      ? ""
+      : setslideInitialValue((prevValue) => prevValue + 25);
+  }
+  function handlePrev() {
+    slideInitialValue <= 0
+      ? ""
+      : setslideInitialValue((prevValue) => prevValue - 25);
   }
   return (
     <>
@@ -91,9 +105,126 @@ function RestaurantMenu() {
               </div>
             </div>
           </div>
+          <div className="w-full overflow-hidden">
+            <div className="flex justify-between mt-8">
+              <h2 className="text-2xl text-black font-extrabold">
+                Deals for you
+              </h2>
+              <div className="flex items-center gap-3">
+                <div
+                  className={`${
+                    slideInitialValue <= 0
+                      ? "opacity-40 bg-gray-200"
+                      : "bg-gray-200"
+                  }  rounded-full flex justify-center items-center w-9 h-9 cursor-pointer`}
+                  onClick={handlePrev}
+                >
+                  <i className="fi fi-rr-arrow-small-left text-2xl mt-2"></i>
+                </div>
+                <div
+                  className={`${
+                    slideInitialValue >= 60
+                      ? "opacity-40 bg-gray-200"
+                      : "bg-gray-200"
+                  } rounded-full flex justify-center items-center w-9 h-9 cursor-pointer`}
+                  onClick={handleNext}
+                >
+                  <i className="fi fi-rr-arrow-small-right text-2xl mt-2"></i>
+                </div>
+              </div>
+            </div>
+            <div
+              className="flex items-center gap-6 mt-4 duration-1000"
+              style={{ translate: `-${slideInitialValue}%` }}
+            >
+              {discountData?.map((data, index) => {
+                return <Discount data={data} key={index} />;
+              })}
+            </div>
+          </div>
+          <h2 className="mt-5 text-center leading-5">MENU</h2>
+          <div className="w-full mt-5">
+            <div className="w-full cursor-pointer text-center items-center relative p-4 font-semibold text-xl rounded-lg bg-slate-200/40">
+              Search for Dishes{" "}
+              <i className="fi fi-rr-search absolute top-3 right-4 mt-1"></i>
+            </div>
+          </div>
+
+          <div>
+            {menuData?.map(({ card: { card } }, index) => {
+              return <MenuCard card={card} key={index} />;
+            })}
+          </div>
         </div>
       </div>
     </>
+  );
+}
+
+function MenuCard({ card } = {}) {
+  let isTrue = false;
+  if (card["@type"]) {
+    isTrue = true;
+  }
+  const [isOpen, setIsOpen] = useState(isTrue);
+  function handleDropDown() {
+    setIsOpen((prev) => !prev);
+  }
+  if (card.itemCards) {
+    const { title, itemCards } = card;
+    return (
+      <div>
+        <div className="flex justify-between items-center">
+          <h1 className="font-extrabold ">
+            {title}
+            {itemCards.length}
+          </h1>
+          <i className="fi fi-rr-angle-small-up" onClick={handleDropDown}></i>
+        </div>
+        <DetailsMenu itemCards={itemCards} isOpen={isOpen} />
+      </div>
+    );
+  } else {
+    const { title, categories } = card;
+    return (
+      <div>
+        <h1>{title}</h1>
+        {categories.map((data) => {
+          return <MenuCard card={data} />;
+        })}
+      </div>
+    );
+  }
+}
+function DetailsMenu({ itemCards, isOpen }) {
+  return (
+    <>
+      {isOpen && (
+        <div className="m-5">
+          {itemCards.map((data) => {
+            const { name } = data.card.info;
+            return <h1>{name}</h1>;
+          })}
+        </div>
+      )}
+    </>
+  );
+}
+
+function Discount({ data } = {}) {
+  const { header, couponCode, offerLogo } = data.info;
+  return (
+    <div className="min-w-[328px] flex gap-4 border broder-slate-700 rounded-xl px-4 py-3">
+      <img
+        className="w-14 h-14 object-contain"
+        src={`${CLOUDNARY_IMG_ID}${offerLogo}`}
+        alt=""
+      />
+      <div>
+        <h4 className="font-extrabold text-[20px]">{couponCode}</h4>
+        <p className="font-extrabold text-sm text-gray-600">{header}</p>
+      </div>
+    </div>
   );
 }
 export default RestaurantMenu;
