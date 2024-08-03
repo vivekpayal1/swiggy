@@ -1,12 +1,16 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { CLOUDNARY_IMG_ID } from "../utils/constant";
+import { Simulate } from "react-dom/test-utils";
+
+const vegIcon =
+  "https://i.pinimg.com/736x/e4/1f/f3/e41ff3b10a26b097602560180fb91a62.jpg";
+const nonVegIcon =
+  "https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Non_veg_symbol.svg/220px-Non_veg_symbol.svg.png";
 
 function RestaurantMenu() {
   const { id } = useParams();
   let menuId = id.split("-").at(-1);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  console.log(currentIndex);
   const [slideInitialValue, setslideInitialValue] = useState(0);
   const [menuData, setMenuData] = useState([]);
   const [resInfo, setResInfo] = useState([]);
@@ -16,13 +20,9 @@ function RestaurantMenu() {
   }, []);
   async function fetchMenu() {
     const response = await fetch(
-      `https://www.swiggy.com/dapi/menu/pl?page-type=REGULAR_MENU&complete-menu=true&lat=30.3164945&lng=78.03219179999999&restaurantId=${menuId}&catalog_qa=undefined&submitAction=ENTER`
+      `https://www.swiggy.com/dapi/menu/pl?page-type=REGULAR_MENU&complete-menu=true&lat=28.7040592&lng=77.10249019999999&restaurantId=${menuId}&catalog_qa=undefined&submitAction=ENTER`
     );
     const data = await response.json();
-    // console.log(
-    //   data.data.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards[2]?.card
-    //     ?.card?.itemCards
-    // );
     setResInfo(data?.data?.cards[2]?.card?.card?.info);
     setDiscountData(
       data?.data?.cards[3]?.card?.card?.gridElements?.infoWithStyle?.offers
@@ -96,8 +96,11 @@ function RestaurantMenu() {
                 />
                 {resInfo.length !== 0 ? (
                   <span>
-                    {resInfo?.expectationNotifiers[0]?.enrichedText}Order above
-                    149 for discounted delivery fee
+                    {resInfo?.expectationNotifiers[0]?.enrichedText.replace(
+                      /<\/?b>/g,
+                      ""
+                    )}
+                    Order above 149 for discounted delivery fee
                   </span>
                 ) : (
                   ""
@@ -173,22 +176,31 @@ function MenuCard({ card } = {}) {
   if (card.itemCards) {
     const { title, itemCards } = card;
     return (
-      <div>
-        <div className="flex justify-between items-center">
-          <h1 className="font-extrabold ">
-            {title}
-            {itemCards.length}
-          </h1>
-          <i className="fi fi-rr-angle-small-up" onClick={handleDropDown}></i>
+      <>
+        <div className="mt-7">
+          <div className="flex justify-between items-center my-4">
+            <h1
+              className={`font-bold ${card["@type"] ? "text-xl" : "text-base"}  `}
+            >
+              {title} ({itemCards.length})
+            </h1>
+            <i
+              className={`fi  ${isOpen ? "fi-rr-angle-small-up" : "fi-rr-angle-small-down"} text-2xl`}
+              onClick={handleDropDown}
+            ></i>
+          </div>
+          <DetailsMenu itemCards={itemCards} isOpen={isOpen} />
         </div>
-        <DetailsMenu itemCards={itemCards} isOpen={isOpen} />
-      </div>
+        <hr
+          className={`my-5 ${card["@type"] ? "[9px]" : "[4px]"} [&:not(:last-child)]:border-${card["@type"] ? "[9px]" : "[4px]"}`}
+        />
+      </>
     );
   } else {
     const { title, categories } = card;
     return (
-      <div>
-        <h1>{title}</h1>
+      <div className="mt-4">
+        <h1 className="font-bold text-xl">{title}</h1>
         {categories.map((data) => {
           return <MenuCard card={data} />;
         })}
@@ -197,13 +209,86 @@ function MenuCard({ card } = {}) {
   }
 }
 function DetailsMenu({ itemCards, isOpen }) {
+  const [isShow, isShowSet] = useState(false);
+  function handleShow() {
+    isShowSet((isSHowPrev) => !isSHowPrev);
+  }
   return (
     <>
       {isOpen && (
-        <div className="m-5">
+        <div>
           {itemCards.map((data) => {
-            const { name } = data.card.info;
-            return <h1>{name}</h1>;
+            const {
+              name,
+              price,
+              id,
+              itemAttribute: { vegClassifier },
+
+              ratings: {
+                aggregatedRating: { rating, ratingCountV2 },
+              },
+              description,
+              imageId,
+            } = data.card.info;
+            let trimDescription = description.substring(0, 140) + "...";
+
+            return (
+              <div key={id}>
+                <div className="flex w-full justify-between">
+                  <div className="">
+                    <img
+                      className="w-6 rounded-sm"
+                      src={vegClassifier === "VEG" ? vegIcon : nonVegIcon}
+                      alt=""
+                    />
+                    <h2 className="font-bold text-lg my-1">{name}</h2>
+                    <p className="font-bold">₹ {price / 100}</p>
+                    {rating ? (
+                      <p className="flex items-center gap-2">
+                        <i className="fi mt-1 fi-sr-star"></i>{" "}
+                        <span>
+                          {rating} ({ratingCountV2})
+                        </span>
+                      </p>
+                    ) : (
+                      ""
+                    )}
+                    <div className="max-w-[85%]">
+                      {description.length > 140 ? (
+                        <div>
+                          <span className=" w-full text-gray-600 mt-2">
+                            {isShow ? description : trimDescription}
+                          </span>
+                          <button
+                            className="font-bold text-gray-600 ml-1"
+                            onClick={handleShow}
+                          >
+                            {isShow ? "less" : "more"}
+                          </button>
+                        </div>
+                      ) : (
+                        <span className=" w-full text-gray-600 mt-2">
+                          {description}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  <div>
+                    <div className="w-[156px] h-[140px] overflow-hidden rounded-lg relative">
+                      <img
+                        src={`${CLOUDNARY_IMG_ID}${imageId}`}
+                        className="h-full w-full"
+                        alt=""
+                      />
+                      <button className="shadow-md absolute -bottom-1 left-1/2 -translate-x-1/2 bg-white text-green-500 font-extrabold text-[18px] rounded-lg w-[85%] py-1">
+                        ADD{" "}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <hr className=" my-5" />
+              </div>
+            );
           })}
         </div>
       )}
