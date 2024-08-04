@@ -1,8 +1,7 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { CLOUDNARY_IMG_ID } from "../utils/constant";
-import { Simulate } from "react-dom/test-utils";
-
+import Coordinates from "../services/context/coordinates";
 const vegIcon =
   "https://i.pinimg.com/736x/e4/1f/f3/e41ff3b10a26b097602560180fb91a62.jpg";
 const nonVegIcon =
@@ -15,23 +14,36 @@ function RestaurantMenu() {
   const [menuData, setMenuData] = useState([]);
   const [resInfo, setResInfo] = useState([]);
   const [discountData, setDiscountData] = useState([]);
+  const [topPicksSlider, setTopPicksSlider] = useState(null);
+  const {
+    coord: { lat, lng },
+  } = useContext(Coordinates);
+  console.log(lat, lng);
   useEffect(() => {
     fetchMenu();
   }, []);
   async function fetchMenu() {
     const response = await fetch(
-      `https://www.swiggy.com/dapi/menu/pl?page-type=REGULAR_MENU&complete-menu=true&lat=28.7040592&lng=77.10249019999999&restaurantId=${menuId}&catalog_qa=undefined&submitAction=ENTER`
+      `https://www.swiggy.com/dapi/menu/pl?page-type=REGULAR_MENU&complete-menu=true&lat=${lat}&lng=${lng}&restaurantId=${menuId}&catalog_qa=undefined&submitAction=ENTER`
     );
+    // const data = 'https://www.swiggy.com/dapi/menu/pl?page-type=REGULAR_MENU&complete-menu=true&lat=28.7040592&lng=77.10249019999999&restaurantId=10392&catalog_qa=undefined&submitAction=ENTER'
     const data = await response.json();
     setResInfo(data?.data?.cards[2]?.card?.card?.info);
+    console.log(data?.data?.cards[2]?.card?.card?.info);
     setDiscountData(
       data?.data?.cards[3]?.card?.card?.gridElements?.infoWithStyle?.offers
     );
     let actualMenuData =
-      (data?.data?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards).filter(
+      data?.data?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards?.filter(
         (data) => data.card.card.itemCards || data.card.card.categories
       );
     setMenuData(actualMenuData);
+
+    const topPicksSliderData =
+      data?.data?.cards[4]?.groupedCard?.cardGroupMa?.REGULAR?.cards?.filter(
+        (data) => data.card.card.title == "Top Picks"
+      );
+    setTopPicksSlider(topPicksSliderData);
   }
 
   function handleNext() {
@@ -52,8 +64,8 @@ function RestaurantMenu() {
             <span>
               <Link to="/">Home</Link>
             </span>
-            / {`${resInfo.city}/`}
-            <span className="text-[#535665] ml-1">{resInfo.name}</span>
+            {`${resInfo?.city}/`}
+            <span className="text-[#535665] ml-1">{resInfo?.name}</span>
           </div>
           <h1 className="font-bold text-2xl py-6">{resInfo?.name}</h1>
           <div className="w-full bg-custom-gradient px-4 pb-4 rounded-lg">
@@ -61,9 +73,9 @@ function RestaurantMenu() {
               <div className="px-3">
                 <div className="flex items-center font-semibold gap-1">
                   <i className="fi fi-ss-circle-star text-green-600 text-lg mt-1"></i>
-                  <span>{resInfo.avgRating}</span>
-                  <span>({resInfo.totalRatingsString})</span>.
-                  <span>{resInfo.costForTwoMessage}</span>
+                  <span>{resInfo?.avgRating}</span>
+                  <span>({resInfo?.totalRatingsString})</span>.
+                  <span>{resInfo?.costForTwoMessage}</span>
                 </div>
                 <p className="underline font-bold text-orange-600 text-sm py-1">
                   {resInfo?.cuisines?.join(",")}
@@ -94,9 +106,9 @@ function RestaurantMenu() {
                   alt=""
                   className="w-5"
                 />
-                {resInfo.length !== 0 ? (
+                {/* {resInfo.length !== 0 ? (
                   <span>
-                    {resInfo?.expectationNotifiers[0]?.enrichedText.replace(
+                    {resInfo?.expectationNotifiers[0]?.enrichedText?.replace(
                       /<\/?b>/g,
                       ""
                     )}
@@ -104,7 +116,7 @@ function RestaurantMenu() {
                   </span>
                 ) : (
                   ""
-                )}
+                )} */}
               </div>
             </div>
           </div>
@@ -152,6 +164,71 @@ function RestaurantMenu() {
               <i className="fi fi-rr-search absolute top-3 right-4 mt-1"></i>
             </div>
           </div>
+
+          {topPicksSlider && (
+            <div className="w-full overflow-hidden">
+              <div className="flex justify-between mt-8">
+                <h2 className="text-2xl text-black font-extrabold">
+                  {topPicksSlider[0]?.card?.card?.title}
+                </h2>
+                <div className="flex items-center gap-3">
+                  <div
+                    className={`${
+                      slideInitialValue <= 0
+                        ? "opacity-40 bg-gray-200"
+                        : "bg-gray-200"
+                    }  rounded-full flex justify-center items-center w-9 h-9 cursor-pointer`}
+                    onClick={handlePrev}
+                  >
+                    <i className="fi fi-rr-arrow-small-left text-2xl mt-2"></i>
+                  </div>
+                  <div
+                    className={`${
+                      slideInitialValue >= 60
+                        ? "opacity-40 bg-gray-200"
+                        : "bg-gray-200"
+                    } rounded-full flex justify-center items-center w-9 h-9 cursor-pointer`}
+                    onClick={handleNext}
+                  >
+                    <i className="fi fi-rr-arrow-small-right text-2xl mt-2"></i>
+                  </div>
+                </div>
+              </div>
+              <div
+                className="flex items-center gap-6 mt-4 duration-1000"
+                style={{ translate: `-${slideInitialValue}%` }}
+              >
+                {topPicksSlider[0]?.card?.card?.carousel.map((data) => {
+                  const {
+                    creativeId,
+                    dish: {
+                      info: { id, defaultPrice, price },
+                    },
+                  } = data;
+
+                  return (
+                    <div key={id} className="flex gap-4">
+                      <div className="min-w-[400px] h-[405px] relative">
+                        <img
+                          className="w-full h-full"
+                          src={`${CLOUDNARY_IMG_ID}${creativeId}`}
+                          alt=""
+                        />
+                        <div className="absolute bottom-4 flex justify-between w-full items-center px-4 ">
+                          <p className="text-white font-bold">
+                            ₹{defaultPrice / 100 || price / 100}
+                          </p>
+                          <button className="shadow-md px-10 py-2 bg-white text-green-500 font-extrabold text-[18px] rounded-lg">
+                            ADD{" "}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
 
           <div>
             {menuData?.map(({ card: { card } }, index) => {
@@ -201,98 +278,103 @@ function MenuCard({ card } = {}) {
     return (
       <div className="mt-4">
         <h1 className="font-bold text-xl">{title}</h1>
-        {categories.map((data) => {
-          return <MenuCard card={data} />;
+        {categories.map((data, index) => {
+          return <MenuCard card={data} key={index} />;
         })}
       </div>
     );
   }
 }
 function DetailsMenu({ itemCards, isOpen }) {
-  const [isShow, isShowSet] = useState(false);
-  function handleShow() {
-    isShowSet((isSHowPrev) => !isSHowPrev);
-  }
   return (
     <>
       {isOpen && (
         <div>
           {itemCards.map((data) => {
-            const {
-              name,
-              price,
-              id,
-              itemAttribute: { vegClassifier },
-
-              ratings: {
-                aggregatedRating: { rating, ratingCountV2 },
-              },
-              description,
-              imageId,
-            } = data.card.info;
-            let trimDescription = description.substring(0, 140) + "...";
-
-            return (
-              <div key={id}>
-                <div className="flex w-full justify-between">
-                  <div className="">
-                    <img
-                      className="w-6 rounded-sm"
-                      src={vegClassifier === "VEG" ? vegIcon : nonVegIcon}
-                      alt=""
-                    />
-                    <h2 className="font-bold text-lg my-1">{name}</h2>
-                    <p className="font-bold">₹ {price / 100}</p>
-                    {rating ? (
-                      <p className="flex items-center gap-2">
-                        <i className="fi mt-1 fi-sr-star"></i>{" "}
-                        <span>
-                          {rating} ({ratingCountV2})
-                        </span>
-                      </p>
-                    ) : (
-                      ""
-                    )}
-                    <div className="max-w-[85%]">
-                      {description.length > 140 ? (
-                        <div>
-                          <span className=" w-full text-gray-600 mt-2">
-                            {isShow ? description : trimDescription}
-                          </span>
-                          <button
-                            className="font-bold text-gray-600 ml-1"
-                            onClick={handleShow}
-                          >
-                            {isShow ? "less" : "more"}
-                          </button>
-                        </div>
-                      ) : (
-                        <span className=" w-full text-gray-600 mt-2">
-                          {description}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                  <div>
-                    <div className="w-[156px] h-[140px] overflow-hidden rounded-lg relative">
-                      <img
-                        src={`${CLOUDNARY_IMG_ID}${imageId}`}
-                        className="h-full w-full"
-                        alt=""
-                      />
-                      <button className="shadow-md absolute -bottom-1 left-1/2 -translate-x-1/2 bg-white text-green-500 font-extrabold text-[18px] rounded-lg w-[85%] py-1">
-                        ADD{" "}
-                      </button>
-                    </div>
-                  </div>
-                </div>
-                <hr className=" my-5" />
-              </div>
-            );
+            const { id } = data.card.info;
+            return <DetailMenuCard data={data} key={id} />;
           })}
         </div>
       )}
     </>
+  );
+}
+function DetailMenuCard({ data }) {
+  const [isShow, isShowSet] = useState(false);
+  const {
+    name,
+    price,
+    defaultPrice,
+    itemAttribute: { vegClassifier = "" },
+
+    ratings: {
+      aggregatedRating: { rating, ratingCountV2 },
+    },
+    description,
+    imageId,
+  } = data.card.info;
+  function handleShow() {
+    isShowSet((isSHowPrev) => !isSHowPrev);
+  }
+  let trimDescription = description?.substring(0, 140) + "...";
+
+  return (
+    <div>
+      <div className="flex w-full justify-between">
+        <div className="">
+          <img
+            className="w-6 rounded-sm"
+            src={vegClassifier === "VEG" ? vegIcon : nonVegIcon}
+            alt=""
+          />
+          <h2 className="font-bold text-lg my-1">{name}</h2>
+          <p className="font-bold">
+            ₹ {Math.floor(defaultPrice / 100 || price / 100)}
+          </p>
+          {rating ? (
+            <p className="flex items-center gap-1">
+              <i className="fi fi-sr-star text-green-700 text-xs "></i>{" "}
+              <div className="flex gap-1 items-center my-1">
+                <span className="font-bold text-sm">{rating}</span>{" "}
+                <span className="text-sm">({ratingCountV2})</span>
+              </div>
+            </p>
+          ) : (
+            ""
+          )}
+          <div className="max-w-[85%]">
+            {description?.length > 140 ? (
+              <div>
+                <span className=" w-full text-gray-600 mt-2">
+                  {isShow ? description : trimDescription}
+                </span>
+                <button
+                  className="font-bold text-gray-600 ml-1"
+                  onClick={handleShow}
+                >
+                  {isShow ? "less" : "more"}
+                </button>
+              </div>
+            ) : (
+              <span className=" w-full text-gray-600 mt-2">{description}</span>
+            )}
+          </div>
+        </div>
+        <div>
+          <div className="w-[156px] h-[140px] overflow-hidden rounded-lg relative">
+            <img
+              src={`${CLOUDNARY_IMG_ID}${imageId}`}
+              className="h-full w-full"
+              alt=""
+            />
+            <button className="shadow-md absolute -bottom-1 left-1/2 -translate-x-1/2 bg-white text-green-500 font-extrabold text-[18px] rounded-lg w-[85%] py-1">
+              ADD{" "}
+            </button>
+          </div>
+        </div>
+      </div>
+      <hr className=" my-5" />
+    </div>
   );
 }
 
