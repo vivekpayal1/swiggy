@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { CLOUDNARY_IMG_ID } from "../utils/constant";
 import Coordinates from "../services/context/coordinates";
+import CartContext from "../services/context/cartContext";
 const vegIcon =
   "https://i.pinimg.com/736x/e4/1f/f3/e41ff3b10a26b097602560180fb91a62.jpg";
 const nonVegIcon =
@@ -18,7 +19,6 @@ function RestaurantMenu() {
   const {
     coord: { lat, lng },
   } = useContext(Coordinates);
-  console.log(lat, lng);
   useEffect(() => {
     fetchMenu();
   }, []);
@@ -26,10 +26,8 @@ function RestaurantMenu() {
     const response = await fetch(
       `https://www.swiggy.com/dapi/menu/pl?page-type=REGULAR_MENU&complete-menu=true&lat=${lat}&lng=${lng}&restaurantId=${menuId}&catalog_qa=undefined&submitAction=ENTER`
     );
-    // const data = 'https://www.swiggy.com/dapi/menu/pl?page-type=REGULAR_MENU&complete-menu=true&lat=28.7040592&lng=77.10249019999999&restaurantId=10392&catalog_qa=undefined&submitAction=ENTER'
     const data = await response.json();
     setResInfo(data?.data?.cards[2]?.card?.card?.info);
-    console.log(data?.data?.cards[2]?.card?.card?.info);
     setDiscountData(
       data?.data?.cards[3]?.card?.card?.gridElements?.infoWithStyle?.offers
     );
@@ -313,6 +311,11 @@ function DetailMenuCard({ data }) {
     description,
     imageId,
   } = data.card.info;
+  const { cartData, setCartData } = useContext(CartContext);
+  console.log(cartData);
+  function handleAddToCard() {
+    setCartData([...cartData, data.card.info]);
+  }
   function handleShow() {
     isShowSet((isSHowPrev) => !isSHowPrev);
   }
@@ -367,8 +370,11 @@ function DetailMenuCard({ data }) {
               className="h-full w-full"
               alt=""
             />
-            <button className="shadow-md absolute -bottom-1 left-1/2 -translate-x-1/2 bg-white text-green-500 font-extrabold text-[18px] rounded-lg w-[85%] py-1">
-              ADD{" "}
+            <button
+              className="shadow-md absolute -bottom-1 left-1/2 -translate-x-1/2 bg-white text-green-500 font-extrabold text-[18px] rounded-lg w-[85%] py-1"
+              onClick={handleAddToCard}
+            >
+              ADD
             </button>
           </div>
         </div>

@@ -3,6 +3,7 @@ import { navItems } from "../utils/constant";
 import { useContext, useEffect, useState } from "react";
 import VisibleContext from "../services/context/visibleContext";
 import Coordinates from "../services/context/coordinates";
+import CartContext from "../services/context/cartContext";
 
 function Header() {
   const { isVisible, setIsVisible } = useContext(VisibleContext);
@@ -10,6 +11,7 @@ function Header() {
   const { setCoord } = useContext(Coordinates);
   const [searchData, setSearchData] = useState("");
   const [address, setAddress] = useState("");
+  const { cartData } = useContext(CartContext);
   useEffect(() => {
     const searchDebounce = setTimeout(() => {
       getCities();
@@ -51,6 +53,7 @@ function Header() {
       lng: data?.data[0]?.geometry?.location?.lng,
     });
     setAddress(data.data[0].formatted_address);
+    setIsVisible(false);
   }
   useEffect(() => {
     handleLongLat();
@@ -66,7 +69,7 @@ function Header() {
           className={`p-5 bg-white flex justify-end text-black w-[750px] transition-all duration-300 h-full z-20 relative ${isVisible ? "left-0" : "-left-[100%]"}`}
           onClick={handlePrevent}
         >
-          <div className="w-[70%]">
+          <div className="w-[50%]">
             <div
               className="mb-5 mt-2 cursor-pointer"
               onClick={() => setIsVisible(false)}
@@ -82,22 +85,29 @@ function Header() {
 
             {searchData && (
               <ul className="border border-[#d4d5d9] px-4 py-4 mt-4">
-                {cities?.map((city) => {
+                {cities?.map((city, index) => {
                   const {
                     structured_formatting: { main_text, secondary_text },
                     place_id,
                   } = city;
                   return (
-                    <li
-                      key={place_id}
-                      className="mb-5"
-                      onClick={() => handleLongLat(place_id)}
-                    >
-                      <p className="font-bold">{main_text}</p>
-                      <p className="text-sm opacity-65 mt-1">
-                        {secondary_text}
-                      </p>
-                    </li>
+                    <div className="my-5" key={index}>
+                      <div className="flex gap-4">
+                        <i className="fi fi-rr-marker mt-1"></i>
+                        <li
+                          key={place_id}
+                          onClick={() => handleLongLat(place_id)}
+                          className="w-full"
+                        >
+                          <p className="font-bold">{main_text}</p>
+                          <p className="text-sm opacity-65 mt-1">
+                            {secondary_text}
+
+                            <span className="opacity-90 mt-3 border block border-gray-400/80 border-dashed"></span>
+                          </p>
+                        </li>
+                      </div>
+                    </div>
                   );
                 })}
               </ul>
@@ -120,11 +130,13 @@ function Header() {
               className="flex items-center gap-2 cursor-pointer"
               onClick={handleSearch}
             >
-              <p className="text-sm  ">
+              <p className="text-sm flex gap-1 items-center">
                 <span className="font-bold pb-1 border-b-2 border-b-black/90 text-black mr-1">
                   Others
                 </span>{" "}
-                {address && <span>{address}</span>}
+                {address && (
+                  <span className="line-clamp-1 max-w-[250px]">{address}</span>
+                )}
               </p>
               <i className="fi fi-rs-angle-small-down text-2xl text-[#fc8019]"></i>
             </p>
@@ -132,15 +144,19 @@ function Header() {
           <nav>
             <ul className="flex items-center gap-12">
               {navItems?.map((navItem) => {
+                console.log(navItem);
                 return (
                   <li key={navItem?.id}>
-                    <a
-                      href="#"
-                      className="flex gap-3 items-center text-[#3d4152] font-semibold"
-                    >
-                      <i className={`fi ${navItem?.navIcon} mt-1`}></i>
-                      <span>{navItem?.name}</span>
-                    </a>
+                    <div className="flex">
+                      <Link
+                        to={`${navItem.path}`}
+                        className="flex gap-3 items-center text-[#3d4152] font-semibold"
+                      >
+                        <i className={`fi ${navItem?.navIcon} mt-1`}></i>
+                        <span>{navItem?.name}</span>
+                      </Link>
+                      {navItem.name == "Cart" && <p>{cartData.length}</p>}
+                    </div>
                   </li>
                 );
               })}

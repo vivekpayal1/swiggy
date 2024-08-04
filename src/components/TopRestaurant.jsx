@@ -1,7 +1,7 @@
 import { useState } from "react";
 import RestaurantCard from "./RestaurantCard";
 
-function TopRestaurantSlide({ data }) {
+function TopRestaurantSlide({ data = [], title } = {}) {
   const [topRestaurantSlide, setTopRestaurantSlide] = useState(0);
   function handlePrev() {
     topRestaurantSlide <= 0
@@ -17,7 +17,7 @@ function TopRestaurantSlide({ data }) {
       <div className="mt-5">
         <div className="flex justify-between">
           <h2 className="text-2xl text-black font-extrabold">
-            Top restaurant chains in Roorkee
+            {title}
           </h2>
           <div className="flex items-center gap-3">
             <div

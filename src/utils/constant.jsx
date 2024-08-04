@@ -8,30 +8,40 @@ export const navItems = [
     id: 1,
     name: "Swiggy Corporate",
     navIcon: "fi-rr-briefcase",
+    path: '/corporate'
+
   },
   {
     id: 2,
     name: "Search",
     navIcon: "fi-rr-search",
+    path: '/search'
   },
   {
     id: 3,
     name: "Offers",
     navIcon: "fi-rr-badge-percent",
+    path: '/cart'
+
   },
   {
     id: 4,
     name: "Help",
     navIcon: "fi-rr-info",
+    path: '/help'
+
   },
   {
     id: 5,
     name: "Sign In",
     navIcon: "fi-rs-user",
+    path: '/signin'
+
   },
   {
     id: 6,
     name: "Cart",
     navIcon: "fi-rr-shopping-cart-add",
+    path: '/cart'
   },
 ];
