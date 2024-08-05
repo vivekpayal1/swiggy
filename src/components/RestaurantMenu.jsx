@@ -301,6 +301,7 @@ function DetailMenuCard({ data }) {
   const [isShow, isShowSet] = useState(false);
   const {
     name,
+    id,
     price,
     defaultPrice,
     itemAttribute: { vegClassifier = "" },
@@ -312,9 +313,17 @@ function DetailMenuCard({ data }) {
     imageId,
   } = data.card.info;
   const { cartData, setCartData } = useContext(CartContext);
-  console.log(cartData);
   function handleAddToCard() {
-    setCartData([...cartData, data.card.info]);
+    const isAdded = cartData.find((data) => data.id === id);
+    if (!isAdded) {
+      setCartData([...cartData, data.card.info]);
+      localStorage.setItem(
+        "cartData",
+        JSON.stringify([...cartData, data.card.info])
+      );
+    } else {
+      alert("HEllo");
+    }
   }
   function handleShow() {
     isShowSet((isSHowPrev) => !isSHowPrev);

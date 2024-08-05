@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Route, Routes } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { json, Route, Routes } from "react-router-dom";
 import Body from "./components/Body";
 import Header from "./components/Header";
 import RestaurantMenu from "./components/RestaurantMenu";
@@ -15,6 +15,14 @@ function App() {
     lng: 77.10249019999999,
   });
   const [cartData, setCartData] = useState([]);
+
+  function getDataFromLocalStorage() {
+    let data = JSON.parse(localStorage.getItem("cartData")) || []
+    setCartData(data);
+  }
+  useEffect(() => {
+    getDataFromLocalStorage();
+  }, []);
   return (
     <CartContext.Provider value={{ cartData, setCartData }}>
       <Coordinates.Provider value={{ coord, setCoord }}>

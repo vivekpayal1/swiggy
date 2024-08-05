@@ -155,7 +155,9 @@ function Header() {
                         <i className={`fi ${navItem?.navIcon} mt-1`}></i>
                         <span>{navItem?.name}</span>
                       </Link>
-                      {navItem.name == "Cart" && <p>{cartData.length}</p>}
+                      {cartData.length > 0
+                        ? navItem.name == "Cart" && <p>{cartData.length}</p>
+                        : ""}
                     </div>
                   </li>
                 );
