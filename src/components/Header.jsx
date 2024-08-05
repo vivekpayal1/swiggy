@@ -144,7 +144,6 @@ function Header() {
           <nav>
             <ul className="flex items-center gap-12">
               {navItems?.map((navItem) => {
-                console.log(navItem);
                 return (
                   <li key={navItem?.id}>
                     <div className="flex">

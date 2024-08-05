@@ -230,7 +230,7 @@ function RestaurantMenu() {
 
           <div>
             {menuData?.map(({ card: { card } }, index) => {
-              return <MenuCard card={card} key={index} />;
+              return <MenuCard card={card} key={index} resInfo={resInfo} />;
             })}
           </div>
         </div>
@@ -239,7 +239,7 @@ function RestaurantMenu() {
   );
 }
 
-function MenuCard({ card } = {}) {
+function MenuCard({ card, resInfo } = {}) {
   let isTrue = false;
   if (card["@type"]) {
     isTrue = true;
@@ -264,7 +264,11 @@ function MenuCard({ card } = {}) {
               onClick={handleDropDown}
             ></i>
           </div>
-          <DetailsMenu itemCards={itemCards} isOpen={isOpen} />
+          <DetailsMenu
+            itemCards={itemCards}
+            isOpen={isOpen}
+            resInfo={resInfo}
+          />
         </div>
         <hr
           className={`my-5 ${card["@type"] ? "[9px]" : "[4px]"} [&:not(:last-child)]:border-${card["@type"] ? "[9px]" : "[4px]"}`}
@@ -283,21 +287,21 @@ function MenuCard({ card } = {}) {
     );
   }
 }
-function DetailsMenu({ itemCards, isOpen }) {
+function DetailsMenu({ itemCards, isOpen, resInfo }) {
   return (
     <>
       {isOpen && (
         <div>
           {itemCards.map((data) => {
             const { id } = data.card.info;
-            return <DetailMenuCard data={data} key={id} />;
+            return <DetailMenuCard data={data} key={id} resInfo={resInfo} />;
           })}
         </div>
       )}
     </>
   );
 }
-function DetailMenuCard({ data }) {
+function DetailMenuCard({ data, resInfo }) {
   const [isShow, isShowSet] = useState(false);
   const {
     name,
@@ -315,12 +319,21 @@ function DetailMenuCard({ data }) {
   const { cartData, setCartData } = useContext(CartContext);
   function handleAddToCard() {
     const isAdded = cartData.find((data) => data.id === id);
+    let resLocalStorageInfo = JSON.parse(localStorage.getItem("resInfo")) || [];
     if (!isAdded) {
-      setCartData([...cartData, data.card.info]);
-      localStorage.setItem(
-        "cartData",
-        JSON.stringify([...cartData, data.card.info])
-      );
+      if (
+        resLocalStorageInfo.name === resInfo.name ||
+        resLocalStorageInfo.length === 0
+      ) {
+        setCartData([...cartData, data.card.info]);
+        localStorage.setItem(
+          "cartData",
+          JSON.stringify([...cartData, data.card.info])
+        );
+        localStorage.setItem("resInfo", JSON.stringify(resInfo));
+      } else {
+        console.log("first");
+      }
     } else {
       alert("HEllo");
     }

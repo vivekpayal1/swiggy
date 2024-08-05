@@ -4,24 +4,45 @@ import { CLOUDNARY_IMG_ID } from "../utils/constant";
 
 function Cart() {
   const { cartData, setCartData } = useContext(CartContext);
+
+  const totalPrice = cartData.reduce((acc, item) => {
+    return acc + item.price / 100 || item.defaultPrice / 100;
+  }, 0);
+
   if (cartData.length <= 0) {
     return <h1>Nothing is there</h1>;
   }
+  function handleClearCart() {
+    setCartData([]);
+    localStorage.setItem("cartData", JSON.stringify([]));
+  }
+
   function handleRemove(i) {
     return () => {
-      let newArr = [...cartData];
-      newArr.splice(i, 1);
-      setCartData(newArr);
-      localStorage.setItem("cartData", JSON.stringify(newArr));
+      if (cartData.length > 1) {
+        let newArr = [...cartData];
+        newArr.splice(i, 1);
+        setCartData(newArr);
+        localStorage.setItem("cartData", JSON.stringify(newArr));
+      } else {
+        handleClearCart();
+      }
     };
   }
   return (
     <div className="w-full">
-      <div className="w-[70%] mx-auto bg-red-50">
+      <div className="w-[50%] mx-auto">
         {cartData.map((cartItem, i) => {
           return (
-            <div className="flex justify-between w-full" key={cartItem.id}>
-              <h2 className=" w-[70] text-3xl">{cartItem.name}</h2>
+            <div
+              className="flex w-full justify-between my-5 p-2"
+              key={cartItem.id}
+            >
+              {" "}
+              <div className=" w-[70]">
+                <h2 className=" text-3xl">{cartItem.name}</h2>
+                <p>₹{cartItem.price / 100 || cartItem.defaultPrice / 100}</p>
+              </div>
               <div className="w-[20%] relative h-full">
                 <img
                   className="rounded-xl aspect-square"
@@ -38,6 +59,9 @@ function Cart() {
             </div>
           );
         })}
+
+        <h1>Total Price - ₹{totalPrice}</h1>
+        <button onClick={handleClearCart}>Clear Cart</button>
       </div>
     </div>
   );
