@@ -1,9 +1,11 @@
-import { useContext } from "react";
-import CartContext from "../services/context/cartContext";
 import { CLOUDNARY_IMG_ID } from "../utils/constant";
+import { useDispatch, useSelector } from "react-redux";
+import { clearCartItem, removeCartItem } from "../services/slices/cartSlice";
 
 function Cart() {
-  const { cartData, setCartData } = useContext(CartContext);
+  const cartData = useSelector((store) => store.cartSlice.cartItems);
+  console.log(cartData);
+  const dispatch = useDispatch();
 
   const totalPrice = cartData.reduce((acc, item) => {
     return acc + item.price / 100 || item.defaultPrice / 100;
@@ -13,19 +15,17 @@ function Cart() {
     return <h1>Nothing is there</h1>;
   }
   function handleClearCart() {
-    setCartData([]);
+    dispatch(clearCartItem());
     localStorage.setItem("cartData", JSON.stringify([]));
   }
 
   function handleRemove(i) {
     return () => {
-      if (cartData.length > 1) {
+      if (cartData.length > 0) {
         let newArr = [...cartData];
         newArr.splice(i, 1);
-        setCartData(newArr);
+        dispatch(removeCartItem(newArr));
         localStorage.setItem("cartData", JSON.stringify(newArr));
-      } else {
-        handleClearCart();
       }
     };
   }

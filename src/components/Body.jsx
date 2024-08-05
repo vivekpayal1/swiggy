@@ -3,7 +3,7 @@ import Offers from "./Offers";
 import TopRestaurant from "./TopRestaurant";
 import OnlineFoodDelivery from "./OnlineFoodDelivery";
 import Coordinates from "../services/context/coordinates";
-import { CLOUDNARY_IMG_ID } from "../utils/constant";
+import { useSelector } from "react-redux";
 
 function Body() {
   const [offersData, setoffersData] = useState([]);
@@ -11,10 +11,11 @@ function Body() {
   const [topResTitle, settopResTitle] = useState("");
   const [onlineTitle, setOnlineTitle] = useState("");
   const [failData, setFailData] = useState({});
-
-  const {
-    coord: { lat, lng },
-  } = useContext(Coordinates);
+  const coord = useSelector((store) => store.coordinates);
+  const { lat, lng } = coord;
+  // const {
+  //   coord: { lat, lng },
+  // } = useContext(Coordinates);
 
   async function fetchData() {
     const data = await fetch(

@@ -1,17 +1,19 @@
 import { Outlet, Link } from "react-router-dom";
 import { navItems } from "../utils/constant";
-import { useContext, useEffect, useState } from "react";
-import VisibleContext from "../services/context/visibleContext";
-import Coordinates from "../services/context/coordinates";
-import CartContext from "../services/context/cartContext";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { toggleSearch } from "../services/slices/toggleSlice";
+import { setCoords } from "../services/slices/coordinatesSlice";
 
 function Header() {
-  const { isVisible, setIsVisible } = useContext(VisibleContext);
+  const dispatch = useDispatch();
+  const isVisible = useSelector((store) => store.toggleSlice.searchToggle);
+  const cartData = useSelector((st) => st.cartSlice.cartItems);
   const [cities, setCities] = useState([]);
-  const { setCoord } = useContext(Coordinates);
   const [searchData, setSearchData] = useState("");
   const [address, setAddress] = useState("");
-  const { cartData } = useContext(CartContext);
+  console.log(cartData);
+
   useEffect(() => {
     const searchDebounce = setTimeout(() => {
       getCities();
@@ -26,10 +28,10 @@ function Header() {
   }
 
   function handleSearch() {
-    setIsVisible(true);
+    dispatch(toggleSearch());
   }
   function handleHide() {
-    setIsVisible(false);
+    dispatch(toggleSearch());
   }
   function handlePrevent(e) {
     e.stopPropagation();
@@ -48,12 +50,15 @@ function Header() {
       `https://www.swiggy.com/dapi/misc/address-recommend?place_id=${id}`
     );
     const data = await response.json();
-    setCoord({
-      lat: data?.data[0]?.geometry?.location?.lat,
-      lng: data?.data[0]?.geometry?.location?.lng,
-    });
+    dispatch(
+      setCoords({
+        lat: data?.data[0]?.geometry?.location?.lat,
+        lng: data?.data[0]?.geometry?.location?.lng,
+      })
+    );
+
     setAddress(data.data[0].formatted_address);
-    setIsVisible(false);
+    dispatch(toggleSearch());
   }
   useEffect(() => {
     handleLongLat();
@@ -72,7 +77,9 @@ function Header() {
           <div className="w-[50%]">
             <div
               className="mb-5 mt-2 cursor-pointer"
-              onClick={() => setIsVisible(false)}
+              onClick={() => {
+                dispatch(toggleSearch());
+              }}
             >
               <i className="fi fi-ss-cross"></i>
             </div>
