@@ -4,11 +4,16 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleLogin, toggleSearch } from "../services/slices/toggleSlice";
 import { setCoords } from "../services/slices/coordinatesSlice";
+import SigniBtn from "./SinginBtn";
+
+
 
 function Header() {
   const dispatch = useDispatch();
   const isVisible = useSelector((store) => store.toggleSlice.searchToggle);
-  const cartData = useSelector((st) => st.cartSlice.cartItems);
+  const isLogginToggle = useSelector((store) => store.toggleSlice.loginToggle);
+
+  const cartData = useSelector((store) => store.cartSlice.cartItems);
   const [cities, setCities] = useState([]);
   const [searchData, setSearchData] = useState("");
   const [address, setAddress] = useState("");
@@ -35,6 +40,9 @@ function Header() {
   }
   function handleHide() {
     dispatch(toggleSearch());
+  }
+  function handleToggleHide() {
+    dispatch(toggleLogin())
   }
   function handlePrevent(e) {
     e.stopPropagation();
@@ -69,6 +77,7 @@ function Header() {
     handleLongLat();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
 
   return (
     <>
@@ -129,58 +138,39 @@ function Header() {
         </div>
       </div>
       <div
-        className={`h-full bg-black/40 w-full fixed z-10 ${isVisible ? "visible" : "invisible"}`}
-        onClick={handleHide}
+        className={`h-full bg-black/40 w-full fixed z-10 ${isLogginToggle ? "visible" : "invisible"}`}
+        onClick={handleToggleHide}
       >
         <div
-          className={`p-5 bg-white flex justify-end text-black w-[750px] transition-all duration-300 h-full z-20 absolute ${isVisible ? "left-0" : "-left-[100%]"}`}
+          className={`p-5 bg-white flex justify-start  text-black w-[750px] transition-all duration-300 h-full z-20 absolute ${isLogginToggle ? "right-0" : "-right-[100%]"}`}
           onClick={handlePrevent}
         >
-          <div className="w-[50%]">
+          <div className="w-[50%] ml-5">
             <div
               className="mb-5 mt-2 cursor-pointer"
               onClick={() => {
-                dispatch(toggleSearch());
+                dispatch(toggleLogin());
               }}
             >
               <i className="fi fi-ss-cross"></i>
+
+
+
             </div>
-            <input
-              type="text"
-              className="border h-[60px] pr-16 w-full border-gray-400 p-4 focus:outline-none focus:shadow-md"
-              onChange={handleSearchCities}
-              placeholder="Search for area, street name.."
-            />
 
-            {searchData && (
-              <ul className="border border-[#d4d5d9] px-4 py-4 mt-4">
-                {cities?.map((city, index) => {
-                  const {
-                    structured_formatting: { main_text, secondary_text },
-                    place_id,
-                  } = city;
-                  return (
-                    <div className="my-5" key={index}>
-                      <div className="flex gap-4">
-                        <i className="fi fi-rr-marker mt-1"></i>
-                        <li
-                          key={place_id}
-                          onClick={() => handleLongLat(place_id)}
-                          className="w-full"
-                        >
-                          <p className="font-bold">{main_text}</p>
-                          <p className="text-sm opacity-65 mt-1">
-                            {secondary_text}
+            <div className="flex justify-between items-center">
+              <div>
+                <h4 className="font-bold text-2xl border-b-2 pb-3 border-black/50%">Login</h4>
+              </div>
+              <div>
+                <img className="w-24" src="https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto/Image-login_btpq7r" alt="" />
+              </div>
+            </div>
 
-                            <span className="opacity-90 mt-3 border block border-gray-400/80 border-dashed"></span>
-                          </p>
-                        </li>
-                      </div>
-                    </div>
-                  );
-                })}
-              </ul>
-            )}
+            <div className=" mt-10">
+              <SigniBtn />
+              <span className="text-sm block mt-3 text-gray-600">By clicking on Login, I accept the Terms & Conditions & Privacy Policy</span>
+            </div>
           </div>
         </div>
       </div>

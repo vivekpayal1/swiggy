@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 
 function Cart() {
   const cartData = useSelector((store) => store.cartSlice.cartItems);
+  const resInfo = useSelector((store) => store.cartSlice.resInfo);
+
   const userData = useSelector(store => store.authSlice.userData)
   const dispatch = useDispatch();
   const navigate = useNavigate()
@@ -44,6 +46,13 @@ function Cart() {
   }
   return (
     <div className="w-full">
+      <div>
+        <img
+          className="rounded-xl aspect-square"
+          src={CLOUDNARY_IMG_ID + resInfo.cloudinaryImageId}
+          alt=""
+        />
+      </div>
       <div className="w-[50%] mx-auto">
         {cartData.map((cartItem, i) => {
           return (

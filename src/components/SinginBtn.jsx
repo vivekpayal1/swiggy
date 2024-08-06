@@ -1,10 +1,12 @@
 import { signInWithPopup, signOut } from "firebase/auth"
 import { auth, provider } from "../utils/firebaseAuth"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { addUserData, removeUserData } from "../services/slices/authSlice"
 import { useNavigate } from "react-router-dom"
+import { toggleLogin } from "../services/slices/toggleSlice"
 
-function Signin() {
+function SigniBtn() {
+    const userData = useSelector(store => store.authSlice.userData)
     const navigate = useNavigate()
     const dispatch = useDispatch()
     async function handleAuth() {
@@ -15,20 +17,19 @@ function Signin() {
         }
         dispatch(addUserData(userData))
         navigate('/')
+        dispatch(toggleLogin())
     }
     async function handleRemoveUser() {
         await signOut(auth)
         dispatch(removeUserData())
+        dispatch(toggleLogin())
     }
     return <div>
-        Google Sign in
 
-        <button onClick={handleAuth} className="px-4 py-2 border flex gap-2 border-slate-200 text-black dark:border-slate-700 rounded-lg  dark:text-slate-200 hover:border-slate-400 dark:hover:border-slate-500 hover:text-slate-900 dark:hover:text-slate-300 hover:shadow transition duration-150">
-            <img className="w-6 h-6" src="https://www.svgrepo.com/show/475656/google-color.svg" loading="lazy" alt="google logo" />
-            <span className="text-black">Login with Google</span>
-        </button>
-        <button onClick={handleRemoveUser}>Logout</button>
+        {userData ? <button className="ext-[20px]  bg-red-400 h-16 text-center align-middle w-full text-white font-bold" onClick={handleRemoveUser}>Logout</button> : <button onClick={handleAuth} className="text-[20px]  bg-[#fc8019] h-16 text-center align-middle w-full text-white font-bold">
+            Login with Google
+        </button>}
 
     </div>
 }
-export default Signin
+export default SigniBtn

@@ -5,7 +5,7 @@ import Header from "./components/Header";
 import RestaurantMenu from "./components/RestaurantMenu";
 import Cart from "./components/Cart";
 import { useSelector } from "react-redux";
-import Signin from "./components/Singin";
+import Signin from "./components/SinginBtn";
 
 function App() {
   const isVisible = useSelector((store) => store.toggleSlice.searchToggle);

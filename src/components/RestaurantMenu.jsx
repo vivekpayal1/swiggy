@@ -1,8 +1,6 @@
-import { useContext, useEffect, useState } from "react";
+import {  useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { CLOUDNARY_IMG_ID } from "../utils/constant";
-import Coordinates from "../services/context/coordinates";
-import CartContext from "../services/context/cartContext";
 import { useSelector } from "react-redux";
 import Discount from "./Discount";
 import DetailMenuCard from "./DetailMenuCard";
