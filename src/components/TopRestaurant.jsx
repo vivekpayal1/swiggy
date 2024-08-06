@@ -21,21 +21,19 @@ function TopRestaurantSlide({ data = [], title } = {}) {
           </h2>
           <div className="flex items-center gap-3">
             <div
-              className={`${
-                topRestaurantSlide <= 0
+              className={`${topRestaurantSlide <= 0
                   ? "opacity-40 bg-gray-200"
                   : "bg-gray-200"
-              }  rounded-full flex justify-center items-center w-9 h-9 cursor-pointer`}
+                }  rounded-full flex justify-center items-center w-9 h-9 cursor-pointer`}
               onClick={handlePrev}
             >
               <i className="fi fi-rr-arrow-small-left text-2xl mt-2"></i>
             </div>
             <div
-              className={`${
-                topRestaurantSlide >= 120
+              className={`${topRestaurantSlide >= 120
                   ? "opacity-40 bg-gray-200"
                   : "bg-gray-200"
-              } rounded-full flex justify-center items-center w-9 h-9 cursor-pointer`}
+                } rounded-full flex justify-center items-center w-9 h-9 cursor-pointer`}
               onClick={handleNext}
             >
               <i className="fi fi-rr-arrow-small-right text-2xl mt-2"></i>

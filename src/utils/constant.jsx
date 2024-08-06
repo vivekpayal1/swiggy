@@ -45,3 +45,21 @@ export const navItems = [
     path: '/cart'
   },
 ];
+export const filterBtns = [
+  {
+    id: 1,
+    btnLabel: 'Ratings 4.0+'
+  },
+  {
+    id: 2,
+    btnLabel: 'Rs. 300-Rs. 600'
+  },
+  {
+    id: 3,
+    btnLabel: 'Offers'
+  },
+  {
+    id: 4,
+    btnLabel: 'Less than Rs. 300'
+  }
+]

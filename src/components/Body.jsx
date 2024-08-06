@@ -1,8 +1,7 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Offers from "./Offers";
 import TopRestaurant from "./TopRestaurant";
 import OnlineFoodDelivery from "./OnlineFoodDelivery";
-import Coordinates from "../services/context/coordinates";
 import { useSelector } from "react-redux";
 
 function Body() {
@@ -13,9 +12,21 @@ function Body() {
   const [failData, setFailData] = useState({});
   const coord = useSelector((store) => store.coordinates);
   const { lat, lng } = coord;
-  // const {
-  //   coord: { lat, lng },
-  // } = useContext(Coordinates);
+  useEffect(() => {
+    fetchData();
+  }, [lat, lng]);
+
+  const filterVal = useSelector(store => store.filterSlice.filterVal)
+  const filterData = topRestaurantData?.filter(item => {
+    if (!filterVal) return true
+    switch (filterVal) {
+      case 'Ratings 4.0+': return item.info.avgRating > 4
+      case 'Rs. 300-Rs. 600': return item.info.costForTwo.slice(1, 4) >= '300' && item.info.costForTwo.slice(1, 4) <= '600'
+      case 'Offers': return
+      case 'Less than Rs. 300': return item.info.costForTwo.slice(1, 4) >= '300'
+      default: return true
+    }
+  })
 
   async function fetchData() {
     const data = await fetch(
@@ -32,9 +43,7 @@ function Body() {
     settopResTitle(response?.data?.cards[1]?.card?.card?.header?.title);
     setOnlineTitle(response?.data?.cards[2]?.card?.card?.title);
   }
-  useEffect(() => {
-    fetchData();
-  }, [lat, lng]);
+
 
   if (failData.communication) {
     return (
@@ -59,7 +68,7 @@ function Body() {
       <div className="w-[75%] mx-auto overflow-hidden">
         <Offers data={offersData} />
         <TopRestaurant data={topRestaurantData} title={topResTitle} />
-        <OnlineFoodDelivery data={topRestaurantData} title={onlineTitle} />
+        <OnlineFoodDelivery data={filterVal ? filterData : topRestaurantData} title={onlineTitle} />
       </div>
     </div>
   );

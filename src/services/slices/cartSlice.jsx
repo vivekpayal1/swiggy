@@ -10,6 +10,7 @@ const cartSlice = createSlice({
     setCartItem: (state, action) => {
       const { cartPageData, resInfo } = action.payload;
       state.cartItems = [...state.cartItems, cartPageData];
+      state.resInfo = resInfo
       localStorage.setItem("cartData", JSON.stringify(state.cartItems));
       localStorage.setItem("resInfo", JSON.stringify(resInfo));
     },
@@ -21,6 +22,7 @@ const cartSlice = createSlice({
       state.cartItems = [];
       localStorage.removeItem("cartData");
       localStorage.removeItem("resInfo");
+      state.resInfo = []
     },
   },
 });

@@ -1,11 +1,14 @@
 import { CLOUDNARY_IMG_ID } from "../utils/constant";
 import { useDispatch, useSelector } from "react-redux";
 import { clearCartItem, removeCartItem } from "../services/slices/cartSlice";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 function Cart() {
   const cartData = useSelector((store) => store.cartSlice.cartItems);
-  console.log(cartData);
+  const userData = useSelector(store => store.authSlice.userData)
   const dispatch = useDispatch();
+  const navigate = useNavigate()
 
   const totalPrice = cartData.reduce((acc, item) => {
     return acc + item.price / 100 || item.defaultPrice / 100;
@@ -21,13 +24,23 @@ function Cart() {
 
   function handleRemove(i) {
     return () => {
-      if (cartData.length > 0) {
+      if (cartData.length > 1) {
         let newArr = [...cartData];
         newArr.splice(i, 1);
         dispatch(removeCartItem(newArr));
-        localStorage.setItem("cartData", JSON.stringify(newArr));
       }
     };
+  }
+
+
+
+  function handlePlaceOrder() {
+    if (!userData) {
+      toast.error('Login First')
+      navigate('/')
+      return
+    }
+    toast.success('Order Placed')
   }
   return (
     <div className="w-full">
@@ -61,6 +74,7 @@ function Cart() {
         })}
 
         <h1>Total Price - ₹{totalPrice}</h1>
+        <button onClick={handlePlaceOrder}> Place Order</button>
         <button onClick={handleClearCart}>Clear Cart</button>
       </div>
     </div>

@@ -2,7 +2,7 @@ import { Outlet, Link } from "react-router-dom";
 import { navItems } from "../utils/constant";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { toggleSearch } from "../services/slices/toggleSlice";
+import { toggleLogin, toggleSearch } from "../services/slices/toggleSlice";
 import { setCoords } from "../services/slices/coordinatesSlice";
 
 function Header() {
@@ -12,8 +12,8 @@ function Header() {
   const [cities, setCities] = useState([]);
   const [searchData, setSearchData] = useState("");
   const [address, setAddress] = useState("");
-  console.log(cartData);
 
+  const userData = useSelector(store => store.authSlice.userData)
   useEffect(() => {
     const searchDebounce = setTimeout(() => {
       getCities();
@@ -29,6 +29,9 @@ function Header() {
 
   function handleSearch() {
     dispatch(toggleSearch());
+  }
+  function handleLogin() {
+    dispatch(toggleLogin());
   }
   function handleHide() {
     dispatch(toggleSearch());
@@ -57,11 +60,14 @@ function Header() {
       })
     );
 
+
+
     setAddress(data.data[0].formatted_address);
     dispatch(toggleSearch());
   }
   useEffect(() => {
     handleLongLat();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -71,7 +77,63 @@ function Header() {
         onClick={handleHide}
       >
         <div
-          className={`p-5 bg-white flex justify-end text-black w-[750px] transition-all duration-300 h-full z-20 relative ${isVisible ? "left-0" : "-left-[100%]"}`}
+          className={`p-5 bg-white flex justify-end text-black w-[750px] transition-all duration-300 h-full z-20 absolute ${isVisible ? "left-0" : "-left-[100%]"}`}
+          onClick={handlePrevent}
+        >
+          <div className="w-[50%]">
+            <div
+              className="mb-5 mt-2 cursor-pointer"
+              onClick={() => {
+                dispatch(toggleSearch());
+              }}
+            >
+              <i className="fi fi-ss-cross"></i>
+            </div>
+            <input
+              type="text"
+              className="border h-[60px] pr-16 w-full border-gray-400 p-4 focus:outline-none focus:shadow-md"
+              onChange={handleSearchCities}
+              placeholder="Search for area, street name.."
+            />
+
+            {searchData && (
+              <ul className="border border-[#d4d5d9] px-4 py-4 mt-4">
+                {cities?.map((city, index) => {
+                  const {
+                    structured_formatting: { main_text, secondary_text },
+                    place_id,
+                  } = city;
+                  return (
+                    <div className="my-5" key={index}>
+                      <div className="flex gap-4">
+                        <i className="fi fi-rr-marker mt-1"></i>
+                        <li
+                          key={place_id}
+                          onClick={() => handleLongLat(place_id)}
+                          className="w-full"
+                        >
+                          <p className="font-bold">{main_text}</p>
+                          <p className="text-sm opacity-65 mt-1">
+                            {secondary_text}
+
+                            <span className="opacity-90 mt-3 border block border-gray-400/80 border-dashed"></span>
+                          </p>
+                        </li>
+                      </div>
+                    </div>
+                  );
+                })}
+              </ul>
+            )}
+          </div>
+        </div>
+      </div>
+      <div
+        className={`h-full bg-black/40 w-full fixed z-10 ${isVisible ? "visible" : "invisible"}`}
+        onClick={handleHide}
+      >
+        <div
+          className={`p-5 bg-white flex justify-end text-black w-[750px] transition-all duration-300 h-full z-20 absolute ${isVisible ? "left-0" : "-left-[100%]"}`}
           onClick={handlePrevent}
         >
           <div className="w-[50%]">
@@ -154,13 +216,20 @@ function Header() {
                 return (
                   <li key={navItem?.id}>
                     <div className="flex">
-                      <Link
+                      {navItem.name === "Sign In" ? <div
+                        onClick={handleLogin}
+                        className="flex cursor-pointer gap-3 items-center text-[#3d4152] font-semibold"
+                      >
+                        {userData ? <img src={userData?.photo} alt={''} /> : <i className={`fi ${navItem?.navIcon} mt-1`}></i>}
+                        <span>{userData ? userData?.name : navItem.name}</span>
+                      </div> : <Link
                         to={`${navItem.path}`}
                         className="flex gap-3 items-center text-[#3d4152] font-semibold"
                       >
-                        <i className={`fi ${navItem?.navIcon} mt-1`}></i>
+                        {<i className={`fi ${navItem?.navIcon} mt-1`}></i>}
                         <span>{navItem?.name}</span>
-                      </Link>
+                      </Link>}
+
                       {cartData.length > 0
                         ? navItem.name == "Cart" && <p>{cartData.length}</p>
                         : ""}

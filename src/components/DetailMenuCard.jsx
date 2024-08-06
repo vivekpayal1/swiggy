@@ -1,17 +1,18 @@
-import { useContext, useState } from "react";
 import { CLOUDNARY_IMG_ID } from "../utils/constant";
 import { useDispatch, useSelector } from "react-redux";
-import CartContext from "../services/context/cartContext";
-import { setCartItem } from "../services/slices/cartSlice";
+import { clearCartItem, setCartItem } from "../services/slices/cartSlice";
+import toast from "react-hot-toast";
+import { useState } from "react";
 const vegIcon =
   "https://i.pinimg.com/736x/e4/1f/f3/e41ff3b10a26b097602560180fb91a62.jpg";
 const nonVegIcon =
   "https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Non_veg_symbol.svg/220px-Non_veg_symbol.svg.png";
 
 function DetailMenuCard({ data, resInfo }) {
+  const [isShow, isShowSet] = useState(false);
+  const [isDiffrent, setIsDiffrent] = useState(false)
   let cartPageData = data.card.info;
   const cartData = useSelector((store) => store.cartSlice.cartItems);
-  const [isShow, isShowSet] = useState(false);
   const {
     name,
     id,
@@ -27,6 +28,8 @@ function DetailMenuCard({ data, resInfo }) {
   } = data.card.info;
   const resLocalStorageInfo = useSelector((store) => store.cartSlice.resInfo);
   const dispatch = useDispatch();
+
+
   function handleAddToCard() {
     const isAdded = cartData.find((data) => data.id === id);
     if (!isAdded) {
@@ -35,15 +38,30 @@ function DetailMenuCard({ data, resInfo }) {
         resLocalStorageInfo.length === 0
       ) {
         dispatch(setCartItem({ cartPageData, resInfo }));
+        toast.success('Added To Cart')
       } else {
-        console.log("first");
+        toast.error('Different Restaurant')
+        setIsDiffrent(prev => !prev)
+
       }
     } else {
-      alert("HEllo");
+      toast.error('Already Added!', {
+        duration: 2000,
+        position: 'top-right',
+      })
     }
   }
   function handleShow() {
     isShowSet((isSHowPrev) => !isSHowPrev);
+  }
+  function handleIsDiffrent() {
+    setIsDiffrent(prev => !prev)
+  }
+  function handleClearCart() {
+    dispatch(clearCartItem());
+    localStorage.setItem("cartData", JSON.stringify([]));
+    // setIsDiffrent(prev => !prev)
+
   }
   let trimDescription = description?.substring(0, 140) + "...";
 
@@ -106,6 +124,16 @@ function DetailMenuCard({ data, resInfo }) {
         </div>
       </div>
       <hr className=" my-5" />
+      {
+        isDiffrent && <div className="z-20 w-[520px] p-8 h-[200px] shadow-xl fixed bottom-2 bg-white left-1/2 -translate-x-1/2">
+          <h4 className="font-base font-bold text-[20px]">Items already in cart</h4>
+          <p className="font-sm mt-2">Your cart contains items from other restaurant. Would you like to reset your cart for adding items from this restaurant?</p>
+          <div className="grid grid-cols-2 gap-4 mt-4">
+            <button type="button" onClick={handleIsDiffrent} className="border-2 text-[#60b246] font-bold border-[#60b246] h-12">No</button>
+            <button className=" bg-[#60b246] font-bold text-white" onClick={handleClearCart}>Yes, start afresh</button>
+          </div>
+        </div>
+      }
     </div>
   );
 }
