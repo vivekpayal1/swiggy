@@ -1,4 +1,5 @@
 import { CLOUDNARY_IMG_ID } from "../utils/constant";
+
 function Discount({ data } = {}) {
   const { header, couponCode, offerLogo } = data.info;
   return (

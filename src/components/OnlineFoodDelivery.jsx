@@ -5,8 +5,6 @@ import { useDispatch } from "react-redux";
 import { setFilterValue } from "../services/slices/filterSlice";
 
 function OnlineFoodDelivery({ data = [], title = '' } = {}) {
-
-
   const [activeBtn, setActiveBtn] = useState(null)
 
   const dispatch = useDispatch()
@@ -21,7 +19,7 @@ function OnlineFoodDelivery({ data = [], title = '' } = {}) {
   return (
     <div>
       <h2 className="text-2xl text-black font-extrabold py-6">{title}</h2>
-      <div className="flex mb-6 gap-3">
+      <div className="flex flex-wrap mb-6 gap-3">
         {
           filterBtns?.map((btn) => {
             const { id, btnLabel } = btn
@@ -31,7 +29,7 @@ function OnlineFoodDelivery({ data = [], title = '' } = {}) {
         }
 
       </div>
-      <div className="grid grid-cols-4 gap-10">
+      <div className="grid grid-col-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-10">
         {data?.map(({ info, cta: { link } }) => {
           return <RestaurantCard info={info} key={info?.id} link={link} />;
         })}

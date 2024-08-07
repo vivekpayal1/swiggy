@@ -6,6 +6,7 @@ import RestaurantMenu from "./components/RestaurantMenu";
 import Cart from "./components/Cart";
 import { useSelector } from "react-redux";
 import Signin from "./components/SinginBtn";
+import SearchBar from "./components/SearchBar";
 
 function App() {
   const isVisible = useSelector((store) => store.toggleSlice.searchToggle);
@@ -16,6 +17,7 @@ function App() {
           <Route path="/" element={<Body />} />
           <Route path="/restaurantmenu/:id" element={<RestaurantMenu />} />
           <Route path="/cart" element={<Cart />} />
+          <Route path="/search" element={<SearchBar />} />
           <Route path="/signin" element={<Signin />} />
 
         </Route>

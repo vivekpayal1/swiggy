@@ -1,9 +1,12 @@
-import {  useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
-import { CLOUDNARY_IMG_ID } from "../utils/constant";
 import { useSelector } from "react-redux";
+import { useParams, Link } from "react-router-dom";
+
+import { useEffect, useState } from "react";
+
 import Discount from "./Discount";
 import DetailMenuCard from "./DetailMenuCard";
+
+import { CLOUDNARY_IMG_ID } from "../utils/constant";
 
 
 function RestaurantMenu() {
@@ -54,7 +57,7 @@ function RestaurantMenu() {
   return (
     <>
       <div className="w-full">
-        <div className=" max-w-[800px] w-full mx-auto">
+        <div className="w-[85%] md:max-w-[800px] md:w-full mx-auto">
           <div className="text-[#93959f] text-xs py-4">
             <span>
               <Link to="/">Home</Link>
@@ -62,8 +65,8 @@ function RestaurantMenu() {
             {`${resInfo?.city}/`}
             <span className="text-[#535665] ml-1">{resInfo?.name}</span>
           </div>
-          <h1 className="font-bold text-2xl py-6">{resInfo?.name}</h1>
-          <div className="w-full bg-custom-gradient px-4 pb-4 rounded-lg">
+          <h1 className="font-bold text-2xl py-2 md:py-6">{resInfo?.name}</h1>
+          <div className="w-full mt-4 sm:mt-0  bg-custom-gradient px-4 pb-4 rounded-lg">
             <div className="shadow-sm border border-slate-200/40 bg-white  pb-3 rounded-lg">
               <div className="px-3">
                 <div className="flex items-center font-semibold gap-1">
@@ -101,7 +104,7 @@ function RestaurantMenu() {
                   alt=""
                   className="w-5"
                 />
-                {/* {resInfo.length !== 0 ? (
+                {resInfo.length !== 0 ? (
                   <span>
                     {resInfo?.expectationNotifiers[0]?.enrichedText?.replace(
                       /<\/?b>/g,
@@ -111,7 +114,7 @@ function RestaurantMenu() {
                   </span>
                 ) : (
                   ""
-                )} */}
+                )}
               </div>
             </div>
           </div>
@@ -122,21 +125,19 @@ function RestaurantMenu() {
               </h2>
               <div className="flex items-center gap-3">
                 <div
-                  className={`${
-                    slideInitialValue <= 0
-                      ? "opacity-40 bg-gray-200"
-                      : "bg-gray-200"
-                  }  rounded-full flex justify-center items-center w-9 h-9 cursor-pointer`}
+                  className={`${slideInitialValue <= 0
+                    ? "opacity-40 bg-gray-200"
+                    : "bg-gray-200"
+                    }  rounded-full flex justify-center items-center w-9 h-9 cursor-pointer`}
                   onClick={handlePrev}
                 >
                   <i className="fi fi-rr-arrow-small-left text-2xl mt-2"></i>
                 </div>
                 <div
-                  className={`${
-                    slideInitialValue >= 60
-                      ? "opacity-40 bg-gray-200"
-                      : "bg-gray-200"
-                  } rounded-full flex justify-center items-center w-9 h-9 cursor-pointer`}
+                  className={`${slideInitialValue >= 60
+                    ? "opacity-40 bg-gray-200"
+                    : "bg-gray-200"
+                    } rounded-full flex justify-center items-center w-9 h-9 cursor-pointer`}
                   onClick={handleNext}
                 >
                   <i className="fi fi-rr-arrow-small-right text-2xl mt-2"></i>
@@ -168,21 +169,19 @@ function RestaurantMenu() {
                 </h2>
                 <div className="flex items-center gap-3">
                   <div
-                    className={`${
-                      slideInitialValue <= 0
-                        ? "opacity-40 bg-gray-200"
-                        : "bg-gray-200"
-                    }  rounded-full flex justify-center items-center w-9 h-9 cursor-pointer`}
+                    className={`${slideInitialValue <= 0
+                      ? "opacity-40 bg-gray-200"
+                      : "bg-gray-200"
+                      }  rounded-full flex justify-center items-center w-9 h-9 cursor-pointer`}
                     onClick={handlePrev}
                   >
                     <i className="fi fi-rr-arrow-small-left text-2xl mt-2"></i>
                   </div>
                   <div
-                    className={`${
-                      slideInitialValue >= 60
-                        ? "opacity-40 bg-gray-200"
-                        : "bg-gray-200"
-                    } rounded-full flex justify-center items-center w-9 h-9 cursor-pointer`}
+                    className={`${slideInitialValue >= 60
+                      ? "opacity-40 bg-gray-200"
+                      : "bg-gray-200"
+                      } rounded-full flex justify-center items-center w-9 h-9 cursor-pointer`}
                     onClick={handleNext}
                   >
                     <i className="fi fi-rr-arrow-small-right text-2xl mt-2"></i>

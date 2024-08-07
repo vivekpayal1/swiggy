@@ -26,7 +26,7 @@ function SigniBtn() {
     }
     return <div>
 
-        {userData ? <button className="ext-[20px]  bg-red-400 h-16 text-center align-middle w-full text-white font-bold" onClick={handleRemoveUser}>Logout</button> : <button onClick={handleAuth} className="text-[20px]  bg-[#fc8019] h-16 text-center align-middle w-full text-white font-bold">
+        {userData ? <button className="text-base md:text-[20px]  bg-red-400 h-16 text-center align-middle w-full text-white font-bold" onClick={handleRemoveUser}>Logout</button> : <button onClick={handleAuth} className="text-base md:text-[20px]    bg-[#fc8019] h-16 text-center align-middle w-full text-white font-bold">
             Login with Google
         </button>}
 

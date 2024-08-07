@@ -4,33 +4,33 @@ export const CLOUDNARY_IMG_ID =
   "https://media-assets.swiggy.com/swiggy/image/upload/";
 
 export const navItems = [
-  {
-    id: 1,
-    name: "Swiggy Corporate",
-    navIcon: "fi-rr-briefcase",
-    path: '/corporate'
+  // {
+  //   id: 1,
+  //   name: "Swiggy Corporate",
+  //   navIcon: "fi-rr-briefcase",
+  //   path: '/corporate'
 
-  },
+  // },
   {
     id: 2,
     name: "Search",
     navIcon: "fi-rr-search",
     path: '/search'
   },
-  {
-    id: 3,
-    name: "Offers",
-    navIcon: "fi-rr-badge-percent",
-    path: '/cart'
+  // {
+  //   id: 3,
+  //   name: "Offers",
+  //   navIcon: "fi-rr-badge-percent",
+  //   path: '/cart'
 
-  },
-  {
-    id: 4,
-    name: "Help",
-    navIcon: "fi-rr-info",
-    path: '/help'
+  // },
+  // {
+  //   id: 4,
+  //   name: "Help",
+  //   navIcon: "fi-rr-info",
+  //   path: '/help'
 
-  },
+  // },
   {
     id: 5,
     name: "Sign In",
@@ -55,11 +55,22 @@ export const filterBtns = [
     btnLabel: 'Rs. 300-Rs. 600'
   },
   {
-    id: 3,
-    btnLabel: 'Offers'
-  },
-  {
     id: 4,
     btnLabel: 'Less than Rs. 300'
   }
 ]
+export const searchFilterBtns = [
+  {
+    id: 1,
+    btnLabel: 'Restaurants'
+  },
+  {
+    id: 2,
+    btnLabel: 'Dishes'
+  },
+]
+
+export const vegIcon =
+  "https://i.pinimg.com/736x/e4/1f/f3/e41ff3b10a26b097602560180fb91a62.jpg";
+export const nonVegIcon =
+  "https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Non_veg_symbol.svg/220px-Non_veg_symbol.svg.png";

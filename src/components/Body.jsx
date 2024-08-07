@@ -22,7 +22,6 @@ function Body() {
     switch (filterVal) {
       case 'Ratings 4.0+': return item.info.avgRating > 4
       case 'Rs. 300-Rs. 600': return item.info.costForTwo.slice(1, 4) >= '300' && item.info.costForTwo.slice(1, 4) <= '600'
-      case 'Offers': return
       case 'Less than Rs. 300': return item.info.costForTwo.slice(1, 4) >= '300'
       default: return true
     }
@@ -65,7 +64,7 @@ function Body() {
 
   return (
     <div className="w-full">
-      <div className="w-[75%] mx-auto overflow-hidden">
+      <div className="w-[90%] md:w-[75%] mx-auto overflow-hidden">
         <Offers data={offersData} />
         <TopRestaurant data={topRestaurantData} title={topResTitle} />
         <OnlineFoodDelivery data={filterVal ? filterData : topRestaurantData} title={onlineTitle} />

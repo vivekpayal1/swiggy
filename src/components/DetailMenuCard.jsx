@@ -1,12 +1,12 @@
-import { CLOUDNARY_IMG_ID } from "../utils/constant";
-import { useDispatch, useSelector } from "react-redux";
-import { clearCartItem, setCartItem } from "../services/slices/cartSlice";
 import toast from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
+
 import { useState } from "react";
-const vegIcon =
-  "https://i.pinimg.com/736x/e4/1f/f3/e41ff3b10a26b097602560180fb91a62.jpg";
-const nonVegIcon =
-  "https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Non_veg_symbol.svg/220px-Non_veg_symbol.svg.png";
+
+import { CLOUDNARY_IMG_ID } from "../utils/constant";
+import { clearCartItem, setCartItem } from "../services/slices/cartSlice";
+
+import { vegIcon, nonVegIcon } from "../utils/constant";
 
 function DetailMenuCard({ data, resInfo }) {
   const [isShow, isShowSet] = useState(false);
@@ -67,7 +67,7 @@ function DetailMenuCard({ data, resInfo }) {
 
   return (
     <div>
-      <div className="flex w-full justify-between">
+      <div className="flex flex-col-reverse sm:flex-row gap-6 md:gap-0 w-full justify-between">
         <div className="">
           <img
             className="w-6 rounded-sm"
@@ -108,10 +108,10 @@ function DetailMenuCard({ data, resInfo }) {
           </div>
         </div>
         <div>
-          <div className="w-[156px] h-[140px] overflow-hidden rounded-lg relative">
+          <div className="w-full sm:w-[156px] h-[140px] overflow-hidden rounded-lg relative">
             <img
               src={`${CLOUDNARY_IMG_ID}${imageId}`}
-              className="h-full w-full"
+              className="h-full w-full object-cover"
               alt=""
             />
             <button

@@ -1,10 +1,13 @@
 import { Outlet, Link } from "react-router-dom";
-import { navItems } from "../utils/constant";
-import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+
+import { useEffect, useState } from "react";
+
 import { toggleLogin, toggleSearch } from "../services/slices/toggleSlice";
 import { setCoords } from "../services/slices/coordinatesSlice";
+
 import SigniBtn from "./SinginBtn";
+import { navItems } from "../utils/constant";
 
 
 
@@ -86,10 +89,10 @@ function Header() {
         onClick={handleHide}
       >
         <div
-          className={`p-5 bg-white flex justify-end text-black w-[750px] transition-all duration-300 h-full z-20 absolute ${isVisible ? "left-0" : "-left-[100%]"}`}
+          className={`p-5 bg-white flex justify-end text-black w-[300px] md:w-[750px] transition-all duration-300 h-full z-20 absolute ${isVisible ? "left-0" : "-left-[100%]"}`}
           onClick={handlePrevent}
         >
-          <div className="w-[50%]">
+          <div className="w-full md:w-[50%]">
             <div
               className="mb-5 mt-2 cursor-pointer"
               onClick={() => {
@@ -140,12 +143,11 @@ function Header() {
       <div
         className={`h-full bg-black/40 w-full fixed z-10 ${isLogginToggle ? "visible" : "invisible"}`}
         onClick={handleToggleHide}
+      ><div
+        className={`p-5 bg-white flex justify-start  text-black w-[300px] md:w-[750px] transition-all duration-300 h-full z-20 absolute ${isLogginToggle ? "right-0" : "-right-[100%]"}`}
+        onClick={handlePrevent}
       >
-        <div
-          className={`p-5 bg-white flex justify-start  text-black w-[750px] transition-all duration-300 h-full z-20 absolute ${isLogginToggle ? "right-0" : "-right-[100%]"}`}
-          onClick={handlePrevent}
-        >
-          <div className="w-[50%] ml-5">
+          <div className="w-full md:w-[50%] md:ml-5">
             <div
               className="mb-5 mt-2 cursor-pointer"
               onClick={() => {
@@ -176,14 +178,16 @@ function Header() {
       </div>
 
       <div className="w-full shadow-md h-20 flex justify-center items-center">
-        <div className="w-[70%] flex justify-between items-center">
-          <div className="flex items-center gap-3">
+        <div className="w-[90%] sm:w-[70%] flex justify-between items-center">
+          <div className="flex items-center gap-1 md:gap-3">
             <Link to="/">
-              <img
-                src="https://1000logos.net/wp-content/uploads/2021/05/Swiggy-emblem.png"
-                alt="logo"
-                className="w-24"
-              />
+              <div className="w-24">
+                <img
+                  src="https://1000logos.net/wp-content/uploads/2021/05/Swiggy-emblem.png"
+                  alt="logo"
+
+                />
+              </div>
             </Link>
             <p
               className="flex items-center gap-2 cursor-pointer"
@@ -200,8 +204,8 @@ function Header() {
               <i className="fi fi-rs-angle-small-down text-2xl text-[#fc8019]"></i>
             </p>
           </div>
-          <nav>
-            <ul className="flex items-center gap-12">
+          <nav >
+            <ul className="flex items-center gap-4 md:gap-12">
               {navItems?.map((navItem) => {
                 return (
                   <li key={navItem?.id}>
@@ -211,13 +215,13 @@ function Header() {
                         className="flex cursor-pointer gap-3 items-center text-[#3d4152] font-semibold"
                       >
                         {userData ? <img src={userData?.photo} alt={''} /> : <i className={`fi ${navItem?.navIcon} mt-1`}></i>}
-                        <span>{userData ? userData?.name : navItem.name}</span>
+                        <span className="sm:block hidden">{userData ? userData?.name : navItem.name}</span>
                       </div> : <Link
                         to={`${navItem.path}`}
                         className="flex gap-3 items-center text-[#3d4152] font-semibold"
                       >
                         {<i className={`fi ${navItem?.navIcon} mt-1`}></i>}
-                        <span>{navItem?.name}</span>
+                        <span className=" sm:block hidden">{navItem?.name}</span>
                       </Link>}
 
                       {cartData.length > 0
