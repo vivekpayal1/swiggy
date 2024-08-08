@@ -7,22 +7,27 @@ import Discount from "./Discount";
 import DetailMenuCard from "./DetailMenuCard";
 
 import { CLOUDNARY_IMG_ID } from "../utils/constant";
+import { MenuShimmer } from "./Shimmer";
 
 
 function RestaurantMenu() {
-  const { id } = useParams();
-  let menuId = id.split("-").at(-1);
-  const [slideInitialValue, setslideInitialValue] = useState(0);
-  const [menuData, setMenuData] = useState([]);
-  const [resInfo, setResInfo] = useState([]);
   const [discountData, setDiscountData] = useState([]);
   const [topPicksSlider, setTopPicksSlider] = useState(null);
-  const coord = useSelector((store) => store.coordinates);
-  const { lat, lng } = coord;
+  const [isLoading, setIsLoading] = useState(false)
+  const [slideInitialValue, setslideInitialValue] = useState(0);
+
   useEffect(() => {
     fetchMenu();
   }, []);
+
+  const { id } = useParams();
+  let menuId = id.split("-").at(-1);
+  const [menuData, setMenuData] = useState([]);
+  const [resInfo, setResInfo] = useState([]);
+  const coord = useSelector((store) => store.coordinates);
+  const { lat, lng } = coord;
   async function fetchMenu() {
+    setIsLoading(true)
     const response = await fetch(
       `https://www.swiggy.com/dapi/menu/pl?page-type=REGULAR_MENU&complete-menu=true&lat=${lat}&lng=${lng}&restaurantId=${menuId}&catalog_qa=undefined&submitAction=ENTER`
     );
@@ -42,8 +47,9 @@ function RestaurantMenu() {
         (data) => data.card.card.title == "Top Picks"
       );
     setTopPicksSlider(topPicksSliderData);
-  }
 
+    setIsLoading(false)
+  }
   function handleNext() {
     slideInitialValue >= 60
       ? ""
@@ -53,6 +59,10 @@ function RestaurantMenu() {
     slideInitialValue <= 0
       ? ""
       : setslideInitialValue((prevValue) => prevValue - 25);
+  }
+
+  if (isLoading) {
+    return <MenuShimmer />
   }
   return (
     <>

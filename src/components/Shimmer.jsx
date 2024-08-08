@@ -10,7 +10,6 @@ export function Shimmer() {
             </div>
             <h2 className=" text-xl text-center md:text-3xl font-semibold text-white">Looking for great food near you...</h2>
         </div>
-
         <div className="w-[90%] sm:w-[70%] mx-auto mt-6">
             <div className="grid grid-col-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-10">
                 {Array(20).fill('').map((_, i) => {
@@ -19,16 +18,35 @@ export function Shimmer() {
                             <div className="h-[200px] bg-gray-300 w-full rounded-2xl"></div>
                         </div>
                         <div className="animate-pulse mt-4">
-                            <div className="h-2.5 bg-gray-200 rounded-full dark:bg-gray-300 w-48 mb-3"></div>
-                            <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-300 max-w-[330px] mb-2.5"></div>
-                            <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-300 mb-2.5"></div>
-                            <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-300 max-w-[160px] mb-2.5"></div>
+                            <div className="h-2.5 bg-gray-200 rounded-full w-48 mb-3"></div>
+                            <div className="h-2 bg-gray-200 rounded-full max-w-[330px] mb-2.5"></div>
+                            <div className="h-2 bg-gray-200 rounded-full mb-2.5"></div>
+                            <div className="h-2 bg-gray-200 rounded-full max-w-[160px] mb-2.5"></div>
                         </div>
                     </div>
                 })}
-
-
             </div>
+        </div>
+    </div>
+}
+export function MenuShimmer() {
+    return <div className="w-[85%] md:max-w-[800px] mx-auto mt-6">
+        <div className="grid grid-col-1 sm:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-2 gap-10">
+            {Array(6).fill('').map((_, i) => {
+                return <div key={i}>
+                    <div className="animate-pulse">
+                        <div className="h-[200px] bg-gray-100 w-full rounded-2xl"></div>
+                    </div>
+                    <div className="animate-pulse mt-4">
+                        <div className="h-2.5 bg-gray-100 rounded-full w-48 mb-3"></div>
+                        <div className="h-2 bg-gray-100 rounded-full max-w-[330px] mb-2.5"></div>
+                        <div className="h-2 bg-gray-100 rounded-full mb-2.5"></div>
+                        <div className="h-2 bg-gray-100 rounded-full max-w-[160px] mb-2.5"></div>
+                    </div>
+                </div>
+            })}
+
+
         </div>
     </div>
 }
