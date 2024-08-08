@@ -3,6 +3,7 @@ import { useEffect, useState } from "react"
 import { searchFilterBtns } from '../utils/constant'
 import Dishes from "./Dishes"
 import SearchRestaurantData from "./SearchRestaurantData"
+import { useSelector } from "react-redux"
 
 function SearchBar() {
     const [searchQuery, setSearchQuery] = useState('')
@@ -23,8 +24,13 @@ function SearchBar() {
         }
     }, [searchQuery])
 
+    const coord = useSelector((store) => store.coordinates);
+    const { lat, lng } = coord;
+
+
+
     async function fetchRestaurantData() {
-        const response = await fetch(`https://www.swiggy.com/dapi/restaurants/search/v3?lat=28.5355161&lng=77.3910265&str=${searchQuery}&trackingId=undefined&submitAction=ENTER&queryUniqueId=09382834-acfe-5c99-a337-42a7454017c1&selectedPLTab=RESTAURANT`)
+        const response = await fetch(`https://www.swiggy.com/dapi/restaurants/search/v3?lat=${lat}&lng=${lng}&str=${searchQuery}&trackingId=undefined&submitAction=ENTER&queryUniqueId=09382834-acfe-5c99-a337-42a7454017c1&selectedPLTab=RESTAURANT`)
         const data = await response.json()
         const mainRestaurantData = (data?.data?.cards[0]?.groupedCard?.cardGroupMap?.RESTAURANT?.cards).filter(data => data?.card?.card?.info)
         setRestaurantData(mainRestaurantData)
@@ -49,8 +55,8 @@ function SearchBar() {
 
 
 
-    return <div className="w-full md:w-[800px] mx-auto">
-        <input type="text" onChange={handleSearch} value={searchQuery} placeholder="Search for Restaurant Food" className="border-2 px-10 py-3 focus:outline-none" />
+    return <div className="w-full md:w-[1200px] mx-auto mt-6">
+        <input type="text" onChange={handleSearch} value={searchQuery} placeholder="Search for Restaurant Food" className="border-2 px-10 py-5 focus:outline-none w-full" />
 
         <div className="flex flex-wrap gap-3 mt-4">
             {
@@ -62,7 +68,7 @@ function SearchBar() {
                 })
             }
         </div>
-        <div className="w-[85%] md:w-[800px] bg-gray-200/50 mt-4">
+        <div className="w-[90%] mx-auto md:max-w-[1200px] md:w-full bg-gray-200/50 mt-4">
             {
                 activeFilter === "Dishes" ? (
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 py-6 px-4">

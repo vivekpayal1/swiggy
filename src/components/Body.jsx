@@ -3,6 +3,7 @@ import Offers from "./Offers";
 import TopRestaurant from "./TopRestaurant";
 import OnlineFoodDelivery from "./OnlineFoodDelivery";
 import { useSelector } from "react-redux";
+import {Shimmer} from "./Shimmer";
 
 function Body() {
   const [offersData, setoffersData] = useState([]);
@@ -10,6 +11,7 @@ function Body() {
   const [topResTitle, settopResTitle] = useState("");
   const [onlineTitle, setOnlineTitle] = useState("");
   const [failData, setFailData] = useState({});
+  const [isLoading, setIsLoading] = useState(false)
   const coord = useSelector((store) => store.coordinates);
   const { lat, lng } = coord;
   useEffect(() => {
@@ -28,6 +30,7 @@ function Body() {
   })
 
   async function fetchData() {
+    setIsLoading(true)
     const data = await fetch(
       `https://www.swiggy.com/dapi/restaurants/list/v5?lat=${lat}&lng=${lng}&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING`
     );
@@ -41,6 +44,8 @@ function Body() {
     setoffersData(response?.data?.cards[0]?.card?.card?.imageGridCards?.info);
     settopResTitle(response?.data?.cards[1]?.card?.card?.header?.title);
     setOnlineTitle(response?.data?.cards[2]?.card?.card?.title);
+    setIsLoading(false)
+
   }
 
 
@@ -60,6 +65,9 @@ function Body() {
         </div>
       </div>
     );
+  }
+  if (isLoading) {
+    return <Shimmer />
   }
 
   return (

@@ -12,9 +12,6 @@ function Cart() {
   const [isShow, isShowSet] = useState(false);
   const dispatch = useDispatch()
 
-
-
-
   const userData = useSelector(store => store.authSlice.userData)
 
 
@@ -75,7 +72,7 @@ function Cart() {
             id,
             price,
             defaultPrice,
-            itemAttribute: { vegClassifier = "" },
+            // itemAttribute: { vegClassifier = "" },
 
             ratings: {
               aggregatedRating: { rating, ratingCountV2 },
@@ -84,13 +81,13 @@ function Cart() {
             imageId, } = data
           let trimDescription = description?.substring(0, 140) + "...";
           return <div key={id} className="mt-5">
-            <div className="flex flex-col-reverse  gap-6 md:gap-0 w-full justify-between"  >
+            <div className="flex flex-col-reverse md:flex-row gap-6 md:gap-0 w-full justify-between"  >
               <div className="">
-                <img
+                {/* <img
                   className="w-6 rounded-sm"
                   src={vegClassifier === "VEG" ? vegIcon : nonVegIcon}
                   alt=""
-                />
+                /> */}
                 <h2 className="font-bold text-lg my-1">{name}</h2>
                 <p className="font-bold">
                   ₹ {Math.floor(defaultPrice / 100 || price / 100)}
@@ -143,17 +140,17 @@ function Cart() {
               </div>
             </div>
             <hr className=" my-5" />
-            <div>
-              <h1>Total Price - ₹{totalPrice}</h1>
-              <div className="flex justify-between">
-                <button onClick={handlePlaceOrder}> Place Order</button>
-                <button onClick={handleClearCart}>Clear Cart</button>
-              </div>
-            </div>
-
           </div>
 
+
         })}
+        <div>
+          <h1>Total Price - ₹{totalPrice}</h1>
+          <div className="flex justify-between">
+            <button onClick={handlePlaceOrder}> Place Order</button>
+            <button onClick={handleClearCart}>Clear Cart</button>
+          </div>
+        </div>
       </div>
     </div>
   );

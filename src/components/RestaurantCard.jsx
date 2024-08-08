@@ -9,6 +9,7 @@ function RestaurantCard({ info, link }) {
           <img
             className="w-full h-full  object-cover"
             src={`${CLOUDNARY_IMG_ID}${info?.cloudinaryImageId}`}
+            loading="lazy"
             alt=""
           />
           <div className="absolute bg-gradient-to-t from-black from-1% to-transparent to-40% top-0 left-0 w-full h-full"></div>

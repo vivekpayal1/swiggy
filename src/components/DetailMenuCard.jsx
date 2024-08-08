@@ -1,24 +1,24 @@
-import toast from "react-hot-toast";
-import { useDispatch, useSelector } from "react-redux";
+
+import { useDispatch } from "react-redux";
 
 import { useState } from "react";
 
 import { CLOUDNARY_IMG_ID } from "../utils/constant";
-import { clearCartItem, setCartItem } from "../services/slices/cartSlice";
+import { clearCartItem } from "../services/slices/cartSlice";
 
 import { vegIcon, nonVegIcon } from "../utils/constant";
+import AddToCartButton from "./AddToCartButton";
 
 function DetailMenuCard({ data, resInfo }) {
+
+
   const [isShow, isShowSet] = useState(false);
   const [isDiffrent, setIsDiffrent] = useState(false)
-  let cartPageData = data.card.info;
-  const cartData = useSelector((store) => store.cartSlice.cartItems);
   const {
     name,
-    id,
     price,
     defaultPrice,
-    itemAttribute: { vegClassifier = "" },
+    itemAttribute,
 
     ratings: {
       aggregatedRating: { rating, ratingCountV2 },
@@ -26,31 +26,7 @@ function DetailMenuCard({ data, resInfo }) {
     description,
     imageId,
   } = data.card.info;
-  const resLocalStorageInfo = useSelector((store) => store.cartSlice.resInfo);
   const dispatch = useDispatch();
-
-
-  function handleAddToCard() {
-    const isAdded = cartData.find((data) => data.id === id);
-    if (!isAdded) {
-      if (
-        resLocalStorageInfo.name === resInfo.name ||
-        resLocalStorageInfo.length === 0
-      ) {
-        dispatch(setCartItem({ cartPageData, resInfo }));
-        toast.success('Added To Cart')
-      } else {
-        toast.error('Different Restaurant')
-        setIsDiffrent(prev => !prev)
-
-      }
-    } else {
-      toast.error('Already Added!', {
-        duration: 2000,
-        position: 'top-right',
-      })
-    }
-  }
   function handleShow() {
     isShowSet((isSHowPrev) => !isSHowPrev);
   }
@@ -71,7 +47,7 @@ function DetailMenuCard({ data, resInfo }) {
         <div className="">
           <img
             className="w-6 rounded-sm"
-            src={vegClassifier === "VEG" ? vegIcon : nonVegIcon}
+            src={itemAttribute && itemAttribute.vegClassifier === "VEG" ? vegIcon : nonVegIcon}
             alt=""
           />
           <h2 className="font-bold text-lg my-1">{name}</h2>
@@ -114,12 +90,8 @@ function DetailMenuCard({ data, resInfo }) {
               className="h-full w-full object-cover"
               alt=""
             />
-            <button
-              className="shadow-md absolute -bottom-1 left-1/2 -translate-x-1/2 bg-white text-green-500 font-extrabold text-[18px] rounded-lg w-[85%] py-1"
-              onClick={handleAddToCard}
-            >
-              ADD
-            </button>
+            <AddToCartButton data={data} resInfo={resInfo} />
+
           </div>
         </div>
       </div>
