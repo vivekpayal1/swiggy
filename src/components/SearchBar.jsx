@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 
 import { searchFilterBtns } from '../utils/constant'
 import Dishes from "./Dishes"
-import SearchRestaurantData from "./SearchRestaurantData"
+import SearchRestaurantData, { withPromotion } from "./SearchRestaurantData"
 import { useSelector } from "react-redux"
 
 function SearchBar() {
@@ -27,6 +27,7 @@ function SearchBar() {
     const coord = useSelector((store) => store.coordinates);
     const { lat, lng } = coord;
 
+    const PromotedRestaurant = withPromotion(SearchRestaurantData)
 
 
     async function fetchRestaurantData() {
@@ -81,8 +82,8 @@ function SearchBar() {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 py-6 px-4">
                         {
                             (RestaurantData?.map((restaurantItem) => {
-                                const { id } = restaurantItem?.card?.card?.info
-                                return <SearchRestaurantData restaurantItem={restaurantItem} key={id} />
+                                const { id, promoted } = restaurantItem.card.card.info
+                                return promoted ? (<PromotedRestaurant restaurantItem={restaurantItem} />) : (<SearchRestaurantData restaurantItem={restaurantItem} key={id} />)
                             }
                             ))
                         }

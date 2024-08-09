@@ -1,7 +1,7 @@
 import { CLOUDNARY_IMG_ID } from "../utils/constant"
 
 function SearchRestaurantData({ restaurantItem } = {}) {
-    const { id, name, avgRating, cloudinaryImageId, costForTwo, aggregatedDiscountInfoV3: { header = "", subHeader = "" } = '', promoted = false, cuisines, sla: { slaString }
+    const { name, avgRating, cloudinaryImageId, costForTwo, aggregatedDiscountInfoV3: { header = "", subHeader = "" } = '', promoted = false, cuisines, sla: { slaString }
     } = restaurantItem.card.card.info
 
     return <div className="grid grid-cols-[140px_1fr] gap-4 overflow-hidden bg-white rounded-xl items-center px-3 py-4">
@@ -23,3 +23,11 @@ function SearchRestaurantData({ restaurantItem } = {}) {
     </div>
 }
 export default SearchRestaurantData
+
+export function withPromotion(Comp) {
+    return function PromotedRestaurant(prop) {
+        return <div> Hello New Res
+            <Comp {...prop} />
+        </div>
+    }
+}
