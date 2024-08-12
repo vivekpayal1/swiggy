@@ -1,23 +1,13 @@
-import { useEffect, useState } from "react";
 import Offers from "./Offers";
 import TopRestaurant from "./TopRestaurant";
 import OnlineFoodDelivery from "./OnlineFoodDelivery";
 import { useSelector } from "react-redux";
-import {Shimmer} from "./Shimmer";
+import { Shimmer } from "./Shimmer";
+import useRestaurant from "../hooks/useRestaurant";
 
 function Body() {
-  const [offersData, setoffersData] = useState([]);
-  const [topRestaurantData, setTopRestaurantData] = useState([]);
-  const [topResTitle, settopResTitle] = useState("");
-  const [onlineTitle, setOnlineTitle] = useState("");
-  const [failData, setFailData] = useState({});
-  const [isLoading, setIsLoading] = useState(false)
-  const coord = useSelector((store) => store.coordinates);
-  const { lat, lng } = coord;
-  useEffect(() => {
-    fetchData();
-  }, [lat, lng]);
 
+  const [offersData, topRestaurantData, topResTitle, onlineTitle, failData, isLoading] = useRestaurant()
   const filterVal = useSelector(store => store.filterSlice.filterVal)
   const filterData = topRestaurantData?.filter(item => {
     if (!filterVal) return true
@@ -28,27 +18,6 @@ function Body() {
       default: return true
     }
   })
-
-  async function fetchData() {
-    setIsLoading(true)
-    const data = await fetch(
-      `https://www.swiggy.com/dapi/restaurants/list/v5?lat=${lat}&lng=${lng}&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING`
-    );
-    const response = await data.json();
-    setFailData(response.data);
-
-    setTopRestaurantData(
-      response?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle
-        ?.restaurants
-    );
-    setoffersData(response?.data?.cards[0]?.card?.card?.imageGridCards?.info);
-    settopResTitle(response?.data?.cards[1]?.card?.card?.header?.title);
-    setOnlineTitle(response?.data?.cards[2]?.card?.card?.title);
-    setIsLoading(false)
-
-  }
-
-
   if (failData.communication) {
     return (
       <div className="flex justify-center items-center h-screen">

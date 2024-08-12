@@ -26,7 +26,8 @@ export default SearchRestaurantData
 
 export function withPromotion(Comp) {
     return function PromotedRestaurant(prop) {
-        return <div> Hello New Res
+        return <div className="relative">
+            <p className="absolute top-5 left-2 rounded-lg px-3 text-white bg-gray-700 ">Ad </p>
             <Comp {...prop} />
         </div>
     }

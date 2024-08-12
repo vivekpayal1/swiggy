@@ -197,9 +197,9 @@ function Header() {
                 <span className="font-bold pb-1 border-b-2 border-b-black/90 text-black mr-1">
                   Others
                 </span>{" "}
-                {address && (
+                {address ? (
                   <span className="line-clamp-1 max-w-[250px]">{address}</span>
-                )}
+                ) : <span>Noida 1</span>}
               </p>
               <i className="fi fi-rs-angle-small-down text-2xl text-[#fc8019]"></i>
             </p>
@@ -214,7 +214,7 @@ function Header() {
                         onClick={handleLogin}
                         className="flex cursor-pointer gap-3 items-center text-[#3d4152] font-semibold"
                       >
-                        {userData ? <img src={userData?.photo} alt={''} /> : <i className={`fi ${navItem?.navIcon} mt-1`}></i>}
+                        {userData ? <img className="w-8 rounded-full h-8" src={userData?.photo} alt={''} /> : <i className={`fi ${navItem?.navIcon} mt-1`}></i>}
                         <span className="sm:block hidden">{userData ? userData?.name : navItem.name}</span>
                       </div> : <Link
                         to={`${navItem.path}`}
