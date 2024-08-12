@@ -19,7 +19,7 @@ function useRestaurant() {
   async function fetchData() {
     setIsLoading(true);
     const data = await fetch(
-      `https://www.swiggy.com/dapi/restaurants/list/v5?lat=${lat}&lng=${lng}&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING`,
+      `${import.meta.env.VITE_SWIGGY_URL}restaurants/list/v5?lat=${lat}&lng=${lng}&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING`,
     );
     const response = await data.json();
     setFailData(response.data);

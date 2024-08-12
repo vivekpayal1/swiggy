@@ -31,11 +31,11 @@ function SearchBar() {
 
 
     async function fetchRestaurantData() {
-        const response = await fetch(`https://www.swiggy.com/dapi/restaurants/search/v3?lat=${lat}&lng=${lng}&str=${searchQuery}&trackingId=undefined&submitAction=ENTER&queryUniqueId=09382834-acfe-5c99-a337-42a7454017c1&selectedPLTab=RESTAURANT`)
+        const response = await fetch(`${import.meta.env.VITE_SWIGGY_URL}/restaurants/search/v3?lat=${lat}&lng=${lng}&str=${searchQuery}&trackingId=undefined&submitAction=ENTER&queryUniqueId=09382834-acfe-5c99-a337-42a7454017c1&selectedPLTab=RESTAURANT`)
         const data = await response.json()
         const mainRestaurantData = (data?.data?.cards[0]?.groupedCard?.cardGroupMap?.RESTAURANT?.cards).filter(data => data?.card?.card?.info)
         setRestaurantData(mainRestaurantData)
-
+ 
     }
     async function fetchDishesData() {
         const response = await fetch(`https://www.swiggy.com/dapi/restaurants/search/v3?lat=28.5355161&lng=77.3910265&str=${searchQuery}&trackingId=a4783fd0-37bc-38ad-f7aa-5e37d71c88d9&submitAction=ENTER&queryUniqueId=2b8988dd-0737-37f4-6dc8-c889ef05562e`)

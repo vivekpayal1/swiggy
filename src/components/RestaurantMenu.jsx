@@ -29,7 +29,7 @@ function RestaurantMenu() {
   async function fetchMenu() {
     setIsLoading(true)
     const response = await fetch(
-      `https://www.swiggy.com/dapi/menu/pl?page-type=REGULAR_MENU&complete-menu=true&lat=${lat}&lng=${lng}&restaurantId=${menuId}&catalog_qa=undefined&submitAction=ENTER`
+      `${import.meta.env.VITE_SWIGGY_URL}/menu/pl?page-type=REGULAR_MENU&complete-menu=true&lat=${lat}&lng=${lng}&restaurantId=${menuId}&catalog_qa=undefined&submitAction=ENTER`
     );
     const data = await response.json();
     setResInfo(data?.data?.cards[2]?.card?.card?.info);

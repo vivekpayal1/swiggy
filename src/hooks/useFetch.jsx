@@ -21,6 +21,7 @@ function useFetch(url) {
     }
     fetchData();
   }, []);
+  
   return { data, isPending, error };
 }
 export default useFetch;
